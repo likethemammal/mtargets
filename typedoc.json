@@ -1,0 +1,35 @@
+{
+  "$schema": "https://typedoc.org/schema.json",
+  "entryPoints": ["src/index.ts"],
+  "out": "website/public/api",
+  "excludePrivate": true,
+  "excludeInternal": true,
+  "readme": "none",
+  "name": "Metric Targets",
+  "includeVersion": true,
+  "categorizeByGroup": false,
+  "defaultCategory": "Other",
+  "categoryOrder": [
+    "Documents",
+    "Model",
+    "Enums",
+    "Constants",
+    "Parsing",
+    "Loading",
+    "Validation",
+    "Evaluation",
+    "Interop",
+    "Drift",
+    "Projection",
+    "*"
+  ],
+  "navigation": {
+    "includeCategories": true
+  },
+  "visibilityFilters": {
+    "protected": false,
+    "private": false,
+    "inherited": true,
+    "external": false
+  }
+}

@@ -1,0 +1,79 @@
+{
+  "name": "mtargets",
+  "version": "1.11.0",
+  "description": "Metric Targets — TypeScript library and CLI for the mtargets file format (measurable quality targets)",
+  "type": "module",
+  "private": true,
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./schema/*": "./schema/*",
+    "./package.json": "./package.json"
+  },
+  "bin": {
+    "mtargets": "./dist/cli.js"
+  },
+  "files": [
+    "dist",
+    "schema",
+    "docs",
+    "examples",
+    "README.md",
+    "CHANGELOG.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "validate:examples": "tsx scripts/validate-examples.ts",
+    "test:all": "vitest run && npm run validate:examples",
+    "docs:api": "typedoc",
+    "docs:sync": "tsx scripts/sync-starlight-content.ts",
+    "docs:dev": "npm run docs:sync && npm run docs:api && npm run --prefix website dev",
+    "docs:build": "npm run docs:sync && npm run docs:api && npm run --prefix website build",
+    "docs:preview": "npm run --prefix website preview",
+    "cli": "tsx src/cli.ts",
+    "demo:lighthouse": "tsx examples/runners/lighthouse-adapter.ts --suite examples/suites/lighthouse-ci.mtargets.yaml --lhr examples/fixtures/lhr-sample.json --out examples/runs/lighthouse-ci.mtargets.yaml",
+    "demo:sentry": "tsx examples/runners/sentry-adapter.ts",
+    "demo:glitchtip": "tsx examples/runners/glitchtip-adapter.ts",
+    "demo:custom": "tsx examples/runners/custom-adapter.ts",
+    "demo:ux-granularity": "tsx examples/runners/ux-granularity-adapter.ts",
+    "generate:catalogs": "tsx scripts/generate-metric-catalogs.ts",
+    "demo:catalogs": "tsx scripts/evaluate-catalogs.ts",
+    "demo:pino-postgres": "tsx examples/runners/pino-postgres-adapter.ts",
+    "demo:all": "npm run demo:lighthouse && npm run demo:sentry && npm run demo:glitchtip && npm run demo:custom && npm run demo:ux-granularity && npm run demo:catalogs && npm run demo:pino-postgres",
+    "prepublishOnly": "npm run build && npm run test:all && npm run docs:build"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "keywords": [
+    "metrics",
+    "slo",
+    "performance",
+    "ux",
+    "thresholds",
+    "mtargets",
+    "yaml",
+    "lighthouse",
+    "sentry",
+    "glitchtip"
+  ],
+  "license": "Apache-2.0",
+  "author": "mtargets contributors",
+  "dependencies": {
+    "yaml": "^2.7.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.13.10",
+    "tsx": "^4.19.3",
+    "typedoc": "^0.28.5",
+    "typescript": "^5.8.2",
+    "vitest": "^3.0.9"
+  }
+}

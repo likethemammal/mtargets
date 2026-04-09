@@ -1,0 +1,14 @@
+node_modules/
+dist/
+*.tsbuildinfo
+coverage/
+.DS_Store
+*.log
+*.tgz
+docs/api/
+!docs/api/.gitkeep
+website/dist/
+website/node_modules/
+website/public/api/
+website/src/content/docs/guides/
+website/src/content/docs/reference/
