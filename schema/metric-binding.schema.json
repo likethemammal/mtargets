@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mtargets.dev/schema/metric-binding.schema.json",
+  "title": "mtargets MetricBinding",
+  "type": "object",
+  "required": ["apiVersion", "kind", "metadata", "spec"],
+  "properties": {
+    "apiVersion": { "const": "mtargets/v1" },
+    "kind": { "const": "MetricBinding" },
+    "metadata": {
+      "type": "object",
+      "required": ["id", "title"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9_-]*$" },
+        "title": { "type": "string" }
+      }
+    },
+    "spec": {
+      "type": "object",
+      "required": ["suiteId"],
+      "properties": {
+        "suiteId": { "type": "string" },
+        "ui": { "type": "object" },
+        "api": { "type": "object" },
+        "tests": { "type": "array" }
+      }
+    }
+  }
+}

@@ -1,0 +1,100 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mtargets.dev/schema/metric-run.schema.json",
+  "title": "mtargets MetricRun",
+  "type": "object",
+  "required": ["apiVersion", "kind", "metadata", "spec"],
+  "additionalProperties": false,
+  "properties": {
+    "apiVersion": { "const": "mtargets/v1" },
+    "kind": { "const": "MetricRun" },
+    "metadata": {
+      "type": "object",
+      "required": ["id", "title", "suiteId"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9_-]*$" },
+        "title": { "type": "string" },
+        "description": { "type": "string" },
+        "labels": {
+          "type": "object",
+          "additionalProperties": { "type": "string" }
+        },
+        "tags": { "type": "array", "items": { "type": "string" } },
+        "owners": { "type": "array", "items": { "type": "string" } },
+        "version": { "type": "string" },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" },
+        "suiteId": { "type": "string" },
+        "suiteVersion": { "type": "string" }
+      }
+    },
+    "spec": {
+      "type": "object",
+      "required": ["startedAt", "status", "results"],
+      "properties": {
+        "startedAt": { "type": "string" },
+        "finishedAt": { "type": "string" },
+        "status": {
+          "enum": ["pass", "warn", "fail", "skipped", "error"]
+        },
+        "subjectSnapshots": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["subjectId"],
+            "properties": {
+              "subjectId": { "type": "string" },
+              "selectors": { "type": "object" }
+            }
+          }
+        },
+        "results": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["objectiveId", "indicatorId", "status"],
+            "properties": {
+              "objectiveId": { "type": "string" },
+              "indicatorId": { "type": "string" },
+              "status": {
+                "enum": ["pass", "warn", "fail", "skipped", "error"]
+              },
+              "observed": true,
+              "unit": { "type": "string" },
+              "threshold": { "type": "object" },
+              "compliance": { "type": "number" },
+              "message": { "type": "string" },
+              "evidence": { "type": "array" },
+              "samples": { "type": "object" }
+            }
+          }
+        },
+        "compositeResults": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["compositeId", "status"],
+            "properties": {
+              "compositeId": { "type": "string" },
+              "status": {
+                "enum": ["pass", "warn", "fail", "skipped", "error"]
+              },
+              "score": { "type": "number" },
+              "message": { "type": "string" }
+            }
+          }
+        },
+        "summary": {
+          "type": "object",
+          "properties": {
+            "passed": { "type": "number" },
+            "warned": { "type": "number" },
+            "failed": { "type": "number" },
+            "errored": { "type": "number" },
+            "skipped": { "type": "number" }
+          }
+        }
+      }
+    }
+  }
+}

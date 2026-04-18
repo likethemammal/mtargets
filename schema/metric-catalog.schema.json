@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mtargets.dev/schema/metric-catalog.schema.json",
+  "title": "mtargets MetricCatalog",
+  "type": "object",
+  "required": ["apiVersion", "kind", "metadata", "spec"],
+  "properties": {
+    "apiVersion": { "const": "mtargets/v1" },
+    "kind": { "const": "MetricCatalog" },
+    "metadata": {
+      "type": "object",
+      "required": ["id", "title"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9_-]*$" },
+        "title": { "type": "string" },
+        "description": { "type": "string" },
+        "labels": { "type": "object" },
+        "tags": { "type": "array", "items": { "type": "string" } },
+        "owners": { "type": "array", "items": { "type": "string" } },
+        "version": { "type": "string" }
+      }
+    },
+    "spec": {
+      "type": "object",
+      "properties": {
+        "subjects": { "type": "array" },
+        "indicators": { "type": "array" },
+        "sources": { "type": "array" },
+        "evidence": { "type": "array" }
+      }
+    }
+  }
+}

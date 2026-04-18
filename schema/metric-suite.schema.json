@@ -1,0 +1,394 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mtargets.dev/schema/metric-suite.schema.json",
+  "title": "mtargets MetricSuite",
+  "type": "object",
+  "required": ["apiVersion", "kind", "metadata", "spec"],
+  "additionalProperties": false,
+  "properties": {
+    "apiVersion": { "const": "mtargets/v1" },
+    "kind": { "const": "MetricSuite" },
+    "metadata": { "$ref": "#/$defs/metadata" },
+    "spec": {
+      "type": "object",
+      "required": ["indicators", "objectives"],
+      "additionalProperties": false,
+      "properties": {
+        "intent": { "type": "string" },
+        "imports": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["catalog"],
+            "properties": {
+              "catalog": { "type": "string" },
+              "indicators": { "type": "array", "items": { "type": "string" } },
+              "subjects": { "type": "array", "items": { "type": "string" } }
+            }
+          }
+        },
+        "subjects": { "type": "array", "items": { "$ref": "#/$defs/subject" } },
+        "indicators": {
+          "type": "array",
+          "minItems": 0,
+          "items": { "$ref": "#/$defs/indicator" }
+        },
+        "objectives": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/objective" }
+        },
+        "composites": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/composite" }
+        },
+        "evidence": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/evidence" }
+        },
+        "defaults": { "$ref": "#/$defs/defaults" },
+        "policy": { "$ref": "#/$defs/policy" },
+        "bindings": { "type": "object" }
+      }
+    }
+  },
+  "$defs": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9_-]*$"
+    },
+    "metadata": {
+      "type": "object",
+      "required": ["id", "title"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "title": { "type": "string", "minLength": 1 },
+        "description": { "type": "string" },
+        "labels": {
+          "type": "object",
+          "additionalProperties": { "type": "string" }
+        },
+        "tags": { "type": "array", "items": { "type": "string" } },
+        "owners": { "type": "array", "items": { "type": "string" } },
+        "version": { "type": "string" },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      }
+    },
+    "subject": {
+      "type": "object",
+      "required": ["id", "type"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "type": {
+          "enum": [
+            "surface",
+            "service",
+            "flow",
+            "agent",
+            "system",
+            "component",
+            "provider",
+            "hook",
+            "unit",
+            "dataset"
+          ]
+        },
+        "title": { "type": "string" },
+        "description": { "type": "string" },
+        "labels": {
+          "type": "object",
+          "additionalProperties": { "type": "string" }
+        },
+        "selectors": { "type": "object" }
+      }
+    },
+    "source": {
+      "type": "object",
+      "required": ["type"],
+      "properties": {
+        "type": { "type": "string", "minLength": 1 },
+        "query": {
+          "oneOf": [{ "type": "string" }, { "type": "object" }]
+        },
+        "params": { "type": "object" },
+        "good": {
+          "oneOf": [{ "type": "string" }, { "type": "object" }]
+        },
+        "bad": {
+          "oneOf": [{ "type": "string" }, { "type": "object" }]
+        },
+        "total": {
+          "oneOf": [{ "type": "string" }, { "type": "object" }]
+        },
+        "rawType": { "enum": ["success", "failure"] },
+        "credentialsRef": { "type": "string" }
+      }
+    },
+    "window": {
+      "oneOf": [
+        { "type": "string" },
+        {
+          "type": "object",
+          "required": ["type"],
+          "properties": {
+            "type": {
+              "enum": ["rolling", "calendar", "run", "ci", "custom"]
+            },
+            "duration": { "type": "string" },
+            "calendar": {
+              "enum": ["day", "week", "month", "quarter"]
+            },
+            "timezone": { "type": "string" },
+            "anchor": { "type": "string" }
+          }
+        }
+      ]
+    },
+    "aggregate": {
+      "oneOf": [
+        {
+          "type": "string",
+          "enum": [
+            "p50",
+            "p75",
+            "p90",
+            "p95",
+            "p99",
+            "avg",
+            "min",
+            "max",
+            "sum",
+            "last",
+            "rate",
+            "pass_rate",
+            "pass_count",
+            "fail_count"
+          ]
+        },
+        {
+          "type": "object",
+          "required": ["method"],
+          "properties": {
+            "method": {
+              "enum": [
+                "p50",
+                "p75",
+                "p90",
+                "p95",
+                "p99",
+                "avg",
+                "min",
+                "max",
+                "sum",
+                "last",
+                "rate",
+                "pass_rate",
+                "pass_count",
+                "fail_count"
+              ]
+            },
+            "percentile": { "type": "number", "minimum": 0, "maximum": 100 }
+          }
+        }
+      ]
+    },
+    "indicator": {
+      "type": "object",
+      "required": ["id", "kind", "unit", "source"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "title": { "type": "string" },
+        "description": { "type": "string" },
+        "kind": {
+          "enum": [
+            "timing",
+            "ratio",
+            "gauge",
+            "count",
+            "score",
+            "assertion",
+            "histogram"
+          ]
+        },
+        "unit": { "type": "string" },
+        "higherIsWorse": { "type": "boolean" },
+        "subjectRef": { "type": "string" },
+        "scope": { "enum": ["subject", "suite"] },
+        "source": { "$ref": "#/$defs/source" },
+        "aggregate": { "$ref": "#/$defs/aggregate" },
+        "window": { "$ref": "#/$defs/window" },
+        "labels": {
+          "type": "object",
+          "additionalProperties": { "type": "string" }
+        },
+        "missing": {
+          "type": "object",
+          "required": ["behavior"],
+          "properties": {
+            "behavior": {
+              "enum": ["fail", "warn", "skip", "treat_as"]
+            },
+            "treatAs": { "type": "number" }
+          }
+        }
+      }
+    },
+    "objective": {
+      "type": "object",
+      "required": ["id", "indicator", "op", "value", "severity"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "title": { "type": "string" },
+        "description": { "type": "string" },
+        "indicator": { "type": "string" },
+        "op": {
+          "enum": [
+            "lt",
+            "lte",
+            "gt",
+            "gte",
+            "eq",
+            "neq",
+            "in",
+            "not_in",
+            "between"
+          ]
+        },
+        "value": true,
+        "severity": { "enum": ["info", "warn", "error"] },
+        "labels": {
+          "type": "object",
+          "additionalProperties": { "type": "string" }
+        },
+        "target": { "type": "number", "minimum": 0, "maximum": 1 },
+        "targetPercent": { "type": "number", "minimum": 0, "exclusiveMaximum": 100 },
+        "relative": {
+          "type": "object",
+          "required": ["baseline", "op", "value"],
+          "properties": {
+            "baseline": { "type": "string" },
+            "op": {
+              "enum": [
+                "lt",
+                "lte",
+                "gt",
+                "gte",
+                "eq",
+                "neq",
+                "in",
+                "not_in",
+                "between"
+              ]
+            },
+            "value": {
+              "oneOf": [{ "type": "number" }, { "type": "string" }]
+            },
+            "combine": { "enum": ["and", "or"] }
+          }
+        },
+        "when": { "type": "object" },
+        "evidenceRefs": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "composite": {
+      "type": "object",
+      "required": ["id", "mode", "objectives", "severity"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "title": { "type": "string" },
+        "mode": { "enum": ["score", "all", "any"] },
+        "objectives": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["ref"],
+            "properties": {
+              "ref": { "type": "string" },
+              "weight": { "type": "number" },
+              "key": { "type": "boolean" }
+            }
+          }
+        },
+        "totalScore": {
+          "type": "object",
+          "properties": {
+            "pass": {
+              "oneOf": [{ "type": "number" }, { "type": "string" }]
+            },
+            "warn": {
+              "oneOf": [{ "type": "number" }, { "type": "string" }]
+            }
+          }
+        },
+        "severity": { "enum": ["info", "warn", "error"] }
+      }
+    },
+    "evidence": {
+      "type": "object",
+      "required": ["id", "type"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "type": {
+          "enum": [
+            "har",
+            "trace",
+            "logs",
+            "screenshot",
+            "profile",
+            "report",
+            "export",
+            "artifact"
+          ]
+        },
+        "description": { "type": "string" },
+        "required": { "type": "boolean" },
+        "filter": {
+          "oneOf": [{ "type": "string" }, { "type": "object" }]
+        },
+        "capture": {
+          "enum": ["on_fail", "always", "on_warn", "never"]
+        },
+        "forObjectives": { "type": "array", "items": { "type": "string" } },
+        "source": { "$ref": "#/$defs/source" }
+      }
+    },
+    "defaults": {
+      "type": "object",
+      "properties": {
+        "window": { "$ref": "#/$defs/window" },
+        "severity": { "enum": ["info", "warn", "error"] },
+        "missing": {
+          "type": "object",
+          "required": ["behavior"],
+          "properties": {
+            "behavior": {
+              "enum": ["fail", "warn", "skip", "treat_as"]
+            },
+            "treatAs": { "type": "number" }
+          }
+        },
+        "currency": { "type": "string" },
+        "labels": {
+          "type": "object",
+          "additionalProperties": { "type": "string" }
+        }
+      }
+    },
+    "policy": {
+      "type": "object",
+      "properties": {
+        "failOn": {
+          "type": "array",
+          "items": { "enum": ["fail", "error", "warn"] }
+        },
+        "warnIsFailure": { "type": "boolean" },
+        "abortOnFail": { "type": "boolean" },
+        "minSampleSize": { "type": "number" },
+        "flakyRetries": { "type": "number" },
+        "timezone": { "type": "string" }
+      }
+    }
+  }
+}
