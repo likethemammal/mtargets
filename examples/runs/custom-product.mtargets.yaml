@@ -1,0 +1,70 @@
+apiVersion: mtargets/v1
+kind: MetricRun
+metadata:
+  id: run-custom-product-demo
+  title: Custom product & DX metrics run
+  labels:
+    runner: custom-adapter
+  suiteId: custom-product
+  suiteVersion: 1.0.0
+spec:
+  startedAt: 2026-07-10T15:49:06.955Z
+  finishedAt: 2026-07-10T15:49:06.955Z
+  status: pass
+  results:
+    - objectiveId: ttg-target
+      indicatorId: brief_time_to_green
+      status: pass
+      observed: 720
+      unit: s
+      threshold:
+        op: lte
+        value: 900
+      message: demo custom analytics
+      samples:
+        n: 200
+    - objectiveId: adoption-floor
+      indicatorId: template_adoption
+      status: pass
+      observed: 0.55
+      unit: "1"
+      threshold:
+        op: gte
+        value: 0.4
+      message: demo custom analytics
+    - objectiveId: queue-cap
+      indicatorId: queue_depth
+      status: pass
+      observed: 18
+      unit: count
+      threshold:
+        op: lte
+        value: 50
+      message: queue=needs-you (demo collector)
+    - objectiveId: spend-soft
+      indicatorId: monthly_spend
+      status: pass
+      observed: 88.5
+      unit: USD
+      threshold:
+        op: lte
+        value: 100
+      message: demo usage meter
+    - objectiveId: spend-hard
+      indicatorId: monthly_spend
+      status: pass
+      observed: 88.5
+      unit: USD
+      threshold:
+        op: lte
+        value: 150
+      message: demo usage meter
+  compositeResults:
+    - compositeId: platform-health
+      status: pass
+  summary:
+    passed: 5
+    warned: 0
+    failed: 0
+    errored: 0
+    skipped: 0

@@ -1,0 +1,43 @@
+apiVersion: mtargets/v1
+kind: MetricRun
+metadata:
+  id: run-sentry-demo
+  title: Error tracking SLO (Sentry / GlitchTip) run
+  labels:
+    runner: sentry-adapter
+    mode: demo
+  suiteId: error-tracking
+  suiteVersion: 1.0.0
+spec:
+  startedAt: 2026-07-10T15:48:53.017Z
+  finishedAt: 2026-07-10T15:48:53.018Z
+  status: pass
+  results:
+    - objectiveId: errors-slo
+      indicatorId: error_event_rate
+      status: pass
+      observed: 0.004
+      unit: "1"
+      threshold:
+        op: lt
+        value: 0.01
+      message: demo error_rate
+      samples:
+        n: 1
+    - objectiveId: issue-backlog
+      indicatorId: unresolved_issues
+      status: pass
+      observed: 12
+      unit: count
+      threshold:
+        op: lte
+        value: 25
+      message: demo issue_count
+      samples:
+        n: 1
+  summary:
+    passed: 2
+    warned: 0
+    failed: 0
+    errored: 0
+    skipped: 0

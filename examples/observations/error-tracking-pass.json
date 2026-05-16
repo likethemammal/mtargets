@@ -1,0 +1,5 @@
+[
+  { "indicatorId": "error_event_rate", "observed": 0.004, "unit": "1", "samples": { "n": 1440 } },
+  { "indicatorId": "unresolved_issues", "observed": 12, "unit": "count" },
+  { "indicatorId": "glitchtip_error_rate", "observed": 0.003, "unit": "1", "samples": { "n": 1440 } }
+]

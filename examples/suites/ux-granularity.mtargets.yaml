@@ -1,0 +1,366 @@
+apiVersion: mtargets/v1
+kind: MetricSuite
+metadata:
+  id: ux-granularity
+  title: UX granularity — page, component, unit, provider, hook
+  version: 1.0.0
+  tags: [ux, component, hook, provider, jank, memory, animation]
+  owners: [web-platform]
+
+spec:
+  intent: |
+    Targets at multiple UI layers: full page, widget, pure unit, context provider,
+    and hook. Includes jank (TBT/INP), animation FPS, and memory gauges.
+
+  defaults:
+    window: ci
+    missing:
+      behavior: fail
+
+  policy:
+    failOn: [fail, error]
+    warnIsFailure: false
+
+  subjects:
+    - id: checkout-page
+      type: surface
+      title: Checkout page
+      selectors:
+        path: /checkout
+        viewport: mobile
+        network: 4g
+        environment: staging
+
+    - id: pay-button
+      type: component
+      title: PaymentButton
+      selectors:
+        component: PaymentButton
+        story: primary
+        testid: pay
+        harness: storybook
+
+    - id: format-money-unit
+      type: unit
+      title: formatMoney pure unit
+      selectors:
+        module: src/lib/money.ts
+        export: formatMoney
+        testFile: money.test.ts
+
+    - id: auth-provider
+      type: provider
+      title: AuthProvider mount cost
+      selectors:
+        provider: AuthProvider
+        wrapper: TestAuthShell
+        harness: testing-library
+
+    - id: use-checkout-draft
+      type: hook
+      title: useCheckoutDraft hook
+      selectors:
+        hook: useCheckoutDraft
+        renderHook: true
+        fixture: empty-cart
+
+    - id: hero-carousel
+      type: component
+      title: Hero carousel (animation)
+      selectors:
+        component: HeroCarousel
+        story: autoplay
+        harness: storybook
+
+  indicators:
+    # --- Page (surface) ---
+    - id: page-lcp
+      kind: timing
+      unit: ms
+      higherIsWorse: true
+      subjectRef: checkout-page
+      aggregate: p75
+      source:
+        type: lighthouse
+        query: largest-contentful-paint
+
+    - id: page-cls
+      kind: gauge
+      unit: "1"
+      higherIsWorse: true
+      subjectRef: checkout-page
+      aggregate: p75
+      source:
+        type: lighthouse
+        query: cumulative-layout-shift
+
+    - id: page-tbt
+      title: Main-thread jank (TBT)
+      kind: timing
+      unit: ms
+      higherIsWorse: true
+      subjectRef: checkout-page
+      aggregate: avg
+      source:
+        type: lighthouse
+        query: total-blocking-time
+
+    - id: page-inp
+      title: Interaction jank (INP)
+      kind: timing
+      unit: ms
+      higherIsWorse: true
+      subjectRef: checkout-page
+      aggregate: p75
+      window: { type: rolling, duration: 28d }
+      source:
+        type: web-vitals
+        query: inp
+
+    - id: page-js-heap
+      title: JS heap after route ready
+      kind: gauge
+      unit: MiB
+      higherIsWorse: true
+      subjectRef: checkout-page
+      aggregate: last
+      source:
+        type: script
+        query: js_heap_mib
+        params:
+          module: ../collectors/js-heap.mjs
+          after: route-ready
+
+    - id: page-dom-nodes
+      title: DOM node count
+      kind: count
+      unit: count
+      higherIsWorse: true
+      subjectRef: checkout-page
+      aggregate: last
+      source:
+        type: script
+        query: dom_node_count
+        params:
+          module: ../collectors/dom-nodes.mjs
+
+    # --- Component ---
+    - id: pay-click-to-paint
+      kind: timing
+      unit: ms
+      higherIsWorse: true
+      subjectRef: pay-button
+      aggregate: p95
+      source:
+        type: custom
+        query: interaction.click_to_next_paint
+        params:
+          testid: pay
+
+    - id: pay-re-renders
+      kind: count
+      unit: count
+      higherIsWorse: true
+      subjectRef: pay-button
+      aggregate: max
+      source:
+        type: custom
+        query: react.rerender_count
+        params:
+          component: PaymentButton
+
+    # --- Unit ---
+    - id: format-money-ops
+      title: formatMoney ops in microbench
+      kind: gauge
+      unit: count
+      higherIsWorse: false
+      subjectRef: format-money-unit
+      aggregate: avg
+      source:
+        type: script
+        query: microbench_ops
+        params:
+          module: ../collectors/microbench.mjs
+          export: formatMoney
+
+    # --- Provider ---
+    - id: auth-provider-mount-ms
+      kind: timing
+      unit: ms
+      higherIsWorse: true
+      subjectRef: auth-provider
+      aggregate: p95
+      source:
+        type: custom
+        query: provider.mount_duration_ms
+        params:
+          provider: AuthProvider
+
+    - id: auth-provider-subscribers
+      kind: gauge
+      unit: count
+      higherIsWorse: true
+      subjectRef: auth-provider
+      aggregate: max
+      source:
+        type: custom
+        query: provider.subscriber_count
+
+    # --- Hook ---
+    - id: hook-render-ms
+      kind: timing
+      unit: ms
+      higherIsWorse: true
+      subjectRef: use-checkout-draft
+      aggregate: p95
+      source:
+        type: custom
+        query: hook.render_duration_ms
+        params:
+          hook: useCheckoutDraft
+
+    - id: hook-effect-churn
+      kind: count
+      unit: count
+      higherIsWorse: true
+      subjectRef: use-checkout-draft
+      aggregate: max
+      source:
+        type: custom
+        query: hook.effect_run_count
+
+    # --- Animation (component) ---
+    - id: hero-fps
+      title: Carousel animation FPS
+      kind: gauge
+      unit: "1"
+      higherIsWorse: false
+      subjectRef: hero-carousel
+      aggregate: avg
+      source:
+        type: script
+        query: animation_fps
+        params:
+          module: ../collectors/raf-fps.mjs
+          durationMs: 3000
+
+    - id: hero-frame-budget
+      title: Frames over 16.7ms budget
+      kind: count
+      unit: count
+      higherIsWorse: true
+      subjectRef: hero-carousel
+      aggregate: sum
+      source:
+        type: script
+        query: long_frames
+        params:
+          module: ../collectors/raf-fps.mjs
+          budgetMs: 16.7
+
+  objectives:
+    - id: page-lcp-good
+      indicator: page-lcp
+      op: lte
+      value: 2500
+      severity: error
+      labels: { channel: page, layer: surface }
+
+    - id: page-cls-good
+      indicator: page-cls
+      op: lte
+      value: 0.1
+      severity: error
+      labels: { channel: page }
+
+    - id: page-tbt-jank
+      indicator: page-tbt
+      op: lte
+      value: 200
+      severity: warn
+      labels: { channel: jank }
+
+    - id: page-inp-jank
+      indicator: page-inp
+      op: lte
+      value: 200
+      severity: error
+      labels: { channel: jank }
+
+    - id: page-heap-cap
+      indicator: page-js-heap
+      op: lte
+      value: 80
+      severity: warn
+      labels: { channel: memory }
+
+    - id: page-dom-cap
+      indicator: page-dom-nodes
+      op: lte
+      value: 1500
+      severity: warn
+      labels: { channel: memory }
+
+    - id: pay-ctp
+      indicator: pay-click-to-paint
+      op: lte
+      value: 100
+      severity: error
+      labels: { channel: component }
+
+    - id: pay-rerender-cap
+      indicator: pay-re-renders
+      op: lte
+      value: 3
+      severity: warn
+      labels: { channel: component }
+
+    - id: money-unit-floor
+      indicator: format-money-ops
+      op: gte
+      value: 50000
+      severity: warn
+      labels: { channel: unit }
+
+    - id: auth-mount
+      indicator: auth-provider-mount-ms
+      op: lte
+      value: 16
+      severity: warn
+      labels: { channel: provider }
+
+    - id: auth-subs
+      indicator: auth-provider-subscribers
+      op: lte
+      value: 50
+      severity: warn
+      labels: { channel: provider }
+
+    - id: hook-render
+      indicator: hook-render-ms
+      op: lte
+      value: 5
+      severity: warn
+      labels: { channel: hook }
+
+    - id: hook-churn
+      indicator: hook-effect-churn
+      op: lte
+      value: 2
+      severity: warn
+      labels: { channel: hook }
+
+    - id: hero-fps-floor
+      indicator: hero-fps
+      op: gte
+      value: 50
+      severity: error
+      labels: { channel: animation }
+
+    - id: hero-long-frames
+      indicator: hero-frame-budget
+      op: lte
+      value: 5
+      severity: warn
+      labels: { channel: animation }

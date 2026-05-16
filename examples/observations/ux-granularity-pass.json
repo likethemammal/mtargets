@@ -1,0 +1,17 @@
+[
+  { "indicatorId": "page-lcp", "observed": 2200, "unit": "ms" },
+  { "indicatorId": "page-cls", "observed": 0.05, "unit": "1" },
+  { "indicatorId": "page-tbt", "observed": 140, "unit": "ms" },
+  { "indicatorId": "page-inp", "observed": 160, "unit": "ms", "samples": { "n": 5000 } },
+  { "indicatorId": "page-js-heap", "observed": 42, "unit": "MiB" },
+  { "indicatorId": "page-dom-nodes", "observed": 820, "unit": "count" },
+  { "indicatorId": "pay-click-to-paint", "observed": 72, "unit": "ms" },
+  { "indicatorId": "pay-re-renders", "observed": 2, "unit": "count" },
+  { "indicatorId": "format-money-ops", "observed": 120000, "unit": "count" },
+  { "indicatorId": "auth-provider-mount-ms", "observed": 8, "unit": "ms" },
+  { "indicatorId": "auth-provider-subscribers", "observed": 12, "unit": "count" },
+  { "indicatorId": "hook-render-ms", "observed": 2.5, "unit": "ms" },
+  { "indicatorId": "hook-effect-churn", "observed": 1, "unit": "count" },
+  { "indicatorId": "hero-fps", "observed": 58, "unit": "1" },
+  { "indicatorId": "hero-frame-budget", "observed": 2, "unit": "count" }
+]

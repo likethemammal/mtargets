@@ -1,0 +1,27 @@
+apiVersion: mtargets/v1
+kind: MetricBinding
+metadata:
+  id: network-conditions-bindings
+  title: Network condition matrix bindings
+
+spec:
+  suiteId: network-conditions
+  ui:
+    path: /metrics/network-conditions
+    groupBy: network
+  tests:
+    - runner: lighthouse-ci
+      matrix:
+        - subject: checkout-4g
+          network: 4g
+        - subject: checkout-slow-3g
+          network: slow-3g
+          cpuThrottling: 4
+      maps:
+        lcp-4g: largest-contentful-paint
+        lcp-slow-3g: largest-contentful-paint
+        tbt-slow-3g: total-blocking-time
+    - runner: playwright-offline
+      maps:
+        offline-shell-ready: offline.shell_ready_ms
+        offline-mutation-queue: offline.mutation_queue_depth

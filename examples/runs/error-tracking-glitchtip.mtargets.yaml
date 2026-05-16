@@ -1,0 +1,32 @@
+apiVersion: mtargets/v1
+kind: MetricRun
+metadata:
+  id: run-glitchtip-demo
+  title: Error tracking SLO (Sentry / GlitchTip) run
+  labels:
+    runner: glitchtip-adapter
+    mode: demo
+  suiteId: error-tracking
+  suiteVersion: 1.0.0
+spec:
+  startedAt: 2026-07-10T15:48:53.501Z
+  finishedAt: 2026-07-10T15:48:53.502Z
+  status: pass
+  results:
+    - objectiveId: glitchtip-errors-slo
+      indicatorId: glitchtip_error_rate
+      status: pass
+      observed: 0.003
+      unit: "1"
+      threshold:
+        op: lt
+        value: 0.01
+      message: demo glitchtip error_rate
+      samples:
+        n: 1
+  summary:
+    passed: 1
+    warned: 0
+    failed: 0
+    errored: 0
+    skipped: 0

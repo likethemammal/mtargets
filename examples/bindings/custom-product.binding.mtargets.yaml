@@ -1,0 +1,25 @@
+apiVersion: mtargets/v1
+kind: MetricBinding
+metadata:
+  id: custom-product-bindings
+  title: Custom product metric bindings
+
+spec:
+  suiteId: custom-product
+  ui:
+    path: /metrics/custom-product
+    groupBy: channel
+  api:
+    resource: metric-suites
+    id: custom-product
+  tests:
+    - runner: custom-sql
+      maps:
+        brief_time_to_green: dx.brief_time_to_green
+        template_adoption: dx.template_adoption
+    - runner: script
+      maps:
+        queue_depth: ../collectors/queue-depth.mjs
+    - runner: usage-gate
+      maps:
+        monthly_spend: cost

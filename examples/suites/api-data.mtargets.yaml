@@ -1,0 +1,197 @@
+apiVersion: mtargets/v1
+kind: MetricSuite
+metadata:
+  id: api-data
+  title: API latency and payload / schema data quality
+  version: 1.0.0
+  tags: [api, dataset, networking, reliability]
+  owners: [platform]
+
+spec:
+  intent: |
+    Service-level API targets plus dataset-shaped payload budgets (bytes, rows,
+    schema freshness). Includes a high-latency link condition for the same route.
+
+  defaults:
+    window: { type: rolling, duration: 5m }
+    missing:
+      behavior: fail
+
+  policy:
+    failOn: [fail, error]
+
+  subjects:
+    - id: orders-api
+      type: service
+      title: Orders API
+      selectors:
+        service: orders-api
+        route: GET /v1/orders
+        method: GET
+        environment: production
+
+    - id: orders-api-lossy
+      type: service
+      title: Orders API over lossy / high-latency link
+      selectors:
+        service: orders-api
+        route: GET /v1/orders
+        method: GET
+        network: custom
+        latencyMs: 800
+        packetLossPercent: 2
+        environment: staging
+
+    - id: orders-list-payload
+      type: dataset
+      title: Orders list JSON payload
+      selectors:
+        endpoint: GET /v1/orders
+        schema: OrderListV2
+        fixture: orders-list.sample.json
+
+    - id: checkout-flow
+      type: flow
+      title: Browse → cart → pay
+      selectors:
+        entry: /catalog
+        exit: /checkout/confirm
+        steps: [catalog, pdp, cart, checkout, confirm]
+
+  indicators:
+    - id: api-p95
+      kind: timing
+      unit: ms
+      higherIsWorse: true
+      subjectRef: orders-api
+      aggregate: p95
+      source:
+        type: promql
+        query: >
+          histogram_quantile(0.95,
+            sum(rate(http_request_duration_seconds_bucket{route="/v1/orders"}[5m])) by (le))
+
+    - id: api-error-rate
+      kind: ratio
+      unit: "1"
+      higherIsWorse: true
+      subjectRef: orders-api
+      aggregate: rate
+      source:
+        type: events
+        bad: { statusClass: 5xx }
+        total: { all: true }
+
+    - id: api-p95-lossy
+      kind: timing
+      unit: ms
+      higherIsWorse: true
+      subjectRef: orders-api-lossy
+      aggregate: p95
+      window: ci
+      source:
+        type: http
+        query:
+          method: GET
+          path: /v1/orders
+        params:
+          injectLatencyMs: 800
+          packetLossPercent: 2
+
+    - id: payload-bytes
+      kind: gauge
+      unit: KiB
+      higherIsWorse: true
+      subjectRef: orders-list-payload
+      aggregate: p95
+      source:
+        type: custom
+        query: api.payload_transfer_kib
+        params:
+          endpoint: GET /v1/orders
+
+    - id: payload-rows
+      kind: count
+      unit: count
+      higherIsWorse: true
+      subjectRef: orders-list-payload
+      aggregate: p95
+      source:
+        type: custom
+        query: api.payload_row_count
+
+    - id: schema-age-hours
+      kind: gauge
+      unit: count
+      higherIsWorse: true
+      subjectRef: orders-list-payload
+      aggregate: last
+      window: run
+      source:
+        type: custom
+        query: api.schema_age_hours
+        params:
+          schema: OrderListV2
+
+    - id: flow-completion-rate
+      kind: ratio
+      unit: "1"
+      higherIsWorse: false
+      subjectRef: checkout-flow
+      aggregate: rate
+      window: { type: rolling, duration: 24h }
+      source:
+        type: events
+        good: { event: checkout_confirm }
+        total: { event: catalog_view }
+
+  objectives:
+    - id: api-latency
+      indicator: api-p95
+      op: lt
+      value: 300
+      target: 0.99
+      severity: error
+      labels: { channel: api }
+
+    - id: api-errors
+      indicator: api-error-rate
+      op: lt
+      value: 0.01
+      severity: error
+      labels: { channel: api }
+
+    - id: api-lossy-budget
+      indicator: api-p95-lossy
+      op: lt
+      value: 2000
+      severity: warn
+      labels: { channel: api, network: lossy }
+
+    - id: payload-size
+      indicator: payload-bytes
+      op: lte
+      value: 100
+      severity: warn
+      labels: { channel: dataset }
+
+    - id: payload-rows-cap
+      indicator: payload-rows
+      op: lte
+      value: 100
+      severity: warn
+      labels: { channel: dataset }
+
+    - id: schema-fresh
+      indicator: schema-age-hours
+      op: lte
+      value: 168
+      severity: warn
+      labels: { channel: dataset }
+
+    - id: flow-complete
+      indicator: flow-completion-rate
+      op: gte
+      value: 0.35
+      severity: warn
+      labels: { channel: flow }

@@ -1,0 +1,27 @@
+apiVersion: mtargets/v1
+kind: MetricBinding
+metadata:
+  id: error-tracking-bindings
+  title: Sentry / GlitchTip bindings
+
+spec:
+  suiteId: error-tracking
+  ui:
+    path: /metrics/error-tracking
+  api:
+    resource: metric-suites
+    id: error-tracking
+  tests:
+    - runner: sentry
+      maps:
+        error_event_rate: "is:unresolved event.type:error"
+        unresolved_issues: "is:unresolved"
+      env:
+        token: SENTRY_AUTH_TOKEN
+        org: SENTRY_ORG
+    - runner: glitchtip
+      maps:
+        glitchtip_error_rate: "is:unresolved event.type:error"
+      env:
+        token: GLITCHTIP_TOKEN
+        baseUrl: GLITCHTIP_URL

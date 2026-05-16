@@ -1,0 +1,25 @@
+apiVersion: mtargets/v1
+kind: MetricBinding
+metadata:
+  id: checkout-quality-bindings
+  title: Checkout quality consumer bindings
+
+spec:
+  suiteId: checkout-quality
+  ui:
+    path: /metrics/checkout-quality
+    groupBy: channel
+  api:
+    resource: metric-suites
+    id: checkout-quality
+  tests:
+    - runner: lighthouse-ci
+      maps:
+        lcp: largest-contentful-paint
+        cls: cumulative-layout-shift
+    - runner: eval
+      maps:
+        agent_smoke: checkout-smoke
+    - runner: usage-gate
+      maps:
+        monthly_spend: cost

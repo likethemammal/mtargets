@@ -1,0 +1,244 @@
+apiVersion: mtargets/v1
+kind: MetricSuite
+metadata:
+  id: checkout-quality
+  title: Checkout quality bar
+  version: 1.0.0
+  tags: [ux, cost, reliability, quality]
+  owners: [web-platform]
+
+spec:
+  intent: |
+    Checkout should be fast on mobile, reliable under normal traffic,
+    cheap enough to operate, and not regress agent-assisted flows.
+
+  defaults:
+    window: run
+    missing:
+      behavior: fail
+    currency: USD
+
+  policy:
+    failOn: [fail, error]
+    warnIsFailure: false
+    minSampleSize: 1
+
+  subjects:
+    - id: checkout-web
+      type: surface
+      title: Checkout page
+      selectors:
+        path: /checkout
+        viewport: mobile
+        network: 4g
+        environment: staging
+
+    - id: checkout-api
+      type: service
+      title: Checkout API
+      selectors:
+        service: checkout-api
+        route: POST /v1/orders
+
+    - id: checkout-agent
+      type: agent
+      title: Checkout assistant
+      selectors:
+        agent: checkout-assistant
+
+  indicators:
+    - id: lcp
+      kind: timing
+      unit: ms
+      higherIsWorse: true
+      subjectRef: checkout-web
+      aggregate: p75
+      window: ci
+      source:
+        type: lighthouse
+        query: largest-contentful-paint
+
+    - id: cls
+      kind: gauge
+      unit: "1"
+      higherIsWorse: true
+      subjectRef: checkout-web
+      aggregate: p75
+      window: ci
+      source:
+        type: lighthouse
+        query: cumulative-layout-shift
+
+    - id: js-bytes
+      kind: gauge
+      unit: KiB
+      higherIsWorse: true
+      subjectRef: checkout-web
+      aggregate: sum
+      source:
+        type: resource-budget
+        query: script.transferSize
+
+    - id: api_p95
+      kind: timing
+      unit: ms
+      higherIsWorse: true
+      subjectRef: checkout-api
+      aggregate: p95
+      window:
+        type: rolling
+        duration: 5m
+      source:
+        type: promql
+        query: >
+          histogram_quantile(0.95,
+            sum(rate(http_request_duration_seconds_bucket{route="/v1/orders"}[5m])) by (le))
+
+    - id: api_error_rate
+      kind: ratio
+      unit: "1"
+      higherIsWorse: true
+      subjectRef: checkout-api
+      aggregate: rate
+      window:
+        type: rolling
+        duration: 5m
+      source:
+        type: events
+        bad:
+          statusClass: 5xx
+        total:
+          all: true
+
+    - id: agent_smoke
+      kind: assertion
+      unit: "1"
+      higherIsWorse: false
+      subjectRef: checkout-agent
+      aggregate: pass_rate
+      window: run
+      source:
+        type: eval-suite
+        query: checkout-smoke
+
+    - id: monthly_spend
+      kind: gauge
+      unit: USD
+      higherIsWorse: true
+      scope: suite
+      aggregate: sum
+      window:
+        type: calendar
+        calendar: month
+      source:
+        type: usage
+        query: cost
+
+  objectives:
+    - id: lcp-good
+      indicator: lcp
+      op: lte
+      value: 2500
+      severity: error
+      labels:
+        channel: ux
+
+    - id: cls-good
+      indicator: cls
+      op: lte
+      value: 0.1
+      severity: error
+      labels:
+        channel: ux
+
+    - id: js-budget
+      indicator: js-bytes
+      op: lte
+      value: 170
+      severity: warn
+      labels:
+        channel: ux
+
+    - id: api-latency
+      indicator: api_p95
+      op: lt
+      value: 500
+      target: 0.99
+      severity: error
+      labels:
+        channel: reliability
+
+    - id: api-errors
+      indicator: api_error_rate
+      op: lt
+      value: 0.01
+      severity: error
+      labels:
+        channel: reliability
+
+    - id: eval-bar
+      indicator: agent_smoke
+      op: gte
+      value: 1.0
+      severity: error
+      labels:
+        channel: quality
+
+    - id: spend-soft
+      indicator: monthly_spend
+      op: lte
+      value: 100
+      severity: warn
+      labels:
+        channel: cost
+
+    - id: spend-hard
+      indicator: monthly_spend
+      op: lte
+      value: 150
+      severity: error
+      labels:
+        channel: cost
+
+  composites:
+    - id: ship-gate
+      title: May ship?
+      mode: score
+      objectives:
+        - ref: lcp-good
+          weight: 2
+        - ref: cls-good
+          weight: 2
+        - ref: api-errors
+          weight: 3
+          key: true
+        - ref: eval-bar
+          weight: 2
+          key: true
+        - ref: js-budget
+          weight: 1
+      totalScore:
+        pass: 0.9
+        warn: 0.75
+      severity: error
+
+  evidence:
+    - id: har
+      type: har
+      capture: on_fail
+      forObjectives: [lcp-good, js-budget]
+      required: false
+
+    - id: traces
+      type: trace
+      capture: on_fail
+      forObjectives: [api-latency, api-errors]
+      filter:
+        service: checkout-api
+      required: true
+
+    - id: eval-diff
+      type: report
+      capture: on_fail
+      forObjectives: [eval-bar]
+      required: true

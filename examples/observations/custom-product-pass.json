@@ -1,0 +1,6 @@
+[
+  { "indicatorId": "brief_time_to_green", "observed": 720, "unit": "s", "samples": { "n": 200 } },
+  { "indicatorId": "template_adoption", "observed": 0.55, "unit": "1" },
+  { "indicatorId": "queue_depth", "observed": 18, "unit": "count" },
+  { "indicatorId": "monthly_spend", "observed": 88.5, "unit": "USD" }
+]

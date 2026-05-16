@@ -1,0 +1,88 @@
+apiVersion: mtargets/v1
+kind: MetricRun
+metadata:
+  id: run_checkout-quality_2026-07-10t15-42-08-365z
+  title: Checkout quality bar run
+  suiteId: checkout-quality
+  suiteVersion: 1.0.0
+spec:
+  startedAt: 2026-07-10T15:42:08.365Z
+  finishedAt: 2026-07-10T15:42:08.365Z
+  status: fail
+  results:
+    - objectiveId: lcp-good
+      indicatorId: lcp
+      status: fail
+      observed: 3200
+      unit: ms
+      threshold:
+        op: lte
+        value: 2500
+    - objectiveId: cls-good
+      indicatorId: cls
+      status: pass
+      observed: 0.04
+      unit: "1"
+      threshold:
+        op: lte
+        value: 0.1
+    - objectiveId: js-budget
+      indicatorId: js-bytes
+      status: warn
+      observed: 200
+      unit: KiB
+      threshold:
+        op: lte
+        value: 170
+    - objectiveId: api-latency
+      indicatorId: api_p95
+      status: pass
+      observed: 320
+      unit: ms
+      threshold:
+        op: lt
+        value: 500
+      compliance: 0.995
+    - objectiveId: api-errors
+      indicatorId: api_error_rate
+      status: pass
+      observed: 0.002
+      unit: "1"
+      threshold:
+        op: lt
+        value: 0.01
+    - objectiveId: eval-bar
+      indicatorId: agent_smoke
+      status: pass
+      observed: 1
+      unit: "1"
+      threshold:
+        op: gte
+        value: 1
+    - objectiveId: spend-soft
+      indicatorId: monthly_spend
+      status: pass
+      observed: 82.4
+      unit: USD
+      threshold:
+        op: lte
+        value: 100
+    - objectiveId: spend-hard
+      indicatorId: monthly_spend
+      status: pass
+      observed: 82.4
+      unit: USD
+      threshold:
+        op: lte
+        value: 150
+  compositeResults:
+    - compositeId: ship-gate
+      status: fail
+      score: 0.7
+      message: score 0.700 below pass 0.9
+  summary:
+    passed: 6
+    warned: 1
+    failed: 1
+    errored: 0
+    skipped: 0

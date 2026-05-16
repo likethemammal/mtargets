@@ -1,0 +1,172 @@
+apiVersion: mtargets/v1
+kind: MetricSuite
+metadata:
+  id: network-conditions
+  title: Checkout under special networking conditions
+  version: 1.0.0
+  tags: [ux, network, throttling, offline]
+  owners: [web-platform]
+
+spec:
+  intent: |
+    Same checkout surface measured under 4G, slow-3G, and offline. Runners apply
+    DevTools/Lighthouse throttling from selectors.network / latencyMs / cpuThrottling.
+
+  defaults:
+    window: ci
+    missing:
+      behavior: fail
+
+  policy:
+    failOn: [fail, error]
+    warnIsFailure: false
+
+  subjects:
+    - id: checkout-4g
+      type: surface
+      title: Checkout @ 4G
+      labels: { network: 4g }
+      selectors:
+        path: /checkout
+        viewport: mobile
+        network: 4g
+        environment: staging
+
+    - id: checkout-slow-3g
+      type: surface
+      title: Checkout @ slow-3G
+      labels: { network: slow-3g }
+      selectors:
+        path: /checkout
+        viewport: mobile
+        network: slow-3g
+        downloadKbps: 400
+        uploadKbps: 400
+        latencyMs: 400
+        cpuThrottling: 4
+        environment: staging
+
+    - id: checkout-offline
+      type: surface
+      title: Checkout @ offline
+      labels: { network: offline }
+      selectors:
+        path: /checkout
+        viewport: mobile
+        network: offline
+        environment: staging
+
+  indicators:
+    - id: lcp-4g
+      kind: timing
+      unit: ms
+      higherIsWorse: true
+      subjectRef: checkout-4g
+      aggregate: p75
+      source:
+        type: lighthouse
+        query: largest-contentful-paint
+        params:
+          formFactor: mobile
+          throttlingMethod: simulate
+
+    - id: lcp-slow-3g
+      kind: timing
+      unit: ms
+      higherIsWorse: true
+      subjectRef: checkout-slow-3g
+      aggregate: p75
+      source:
+        type: lighthouse
+        query: largest-contentful-paint
+        params:
+          formFactor: mobile
+          throttlingMethod: simulate
+
+    - id: tbt-slow-3g
+      kind: timing
+      unit: ms
+      higherIsWorse: true
+      subjectRef: checkout-slow-3g
+      aggregate: avg
+      source:
+        type: lighthouse
+        query: total-blocking-time
+
+    - id: offline-shell-ready
+      title: Offline shell interactive
+      kind: timing
+      unit: ms
+      higherIsWorse: true
+      subjectRef: checkout-offline
+      aggregate: avg
+      source:
+        type: custom
+        query: offline.shell_ready_ms
+        params:
+          expectCachedShell: true
+
+    - id: offline-mutation-queue
+      title: Offline mutation queue depth
+      kind: gauge
+      unit: count
+      higherIsWorse: true
+      subjectRef: checkout-offline
+      aggregate: last
+      source:
+        type: custom
+        query: offline.mutation_queue_depth
+
+    - id: offline-error-rate
+      kind: ratio
+      unit: "1"
+      higherIsWorse: true
+      subjectRef: checkout-offline
+      aggregate: rate
+      source:
+        type: events
+        bad: { class: unhandled_offline_error }
+        total: { session: true }
+
+  objectives:
+    - id: lcp-4g-good
+      indicator: lcp-4g
+      op: lte
+      value: 2500
+      severity: error
+      labels: { network: 4g }
+
+    - id: lcp-slow-3g-budget
+      indicator: lcp-slow-3g
+      op: lte
+      value: 5000
+      severity: warn
+      labels: { network: slow-3g }
+
+    - id: tbt-slow-3g-budget
+      indicator: tbt-slow-3g
+      op: lte
+      value: 600
+      severity: warn
+      labels: { network: slow-3g, channel: jank }
+
+    - id: offline-shell
+      indicator: offline-shell-ready
+      op: lte
+      value: 1000
+      severity: error
+      labels: { network: offline }
+
+    - id: offline-queue-cap
+      indicator: offline-mutation-queue
+      op: lte
+      value: 20
+      severity: warn
+      labels: { network: offline }
+
+    - id: offline-errors
+      indicator: offline-error-rate
+      op: lt
+      value: 0.01
+      severity: error
+      labels: { network: offline }

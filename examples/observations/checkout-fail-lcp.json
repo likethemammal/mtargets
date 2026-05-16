@@ -1,0 +1,9 @@
+[
+  { "indicatorId": "lcp", "observed": 3200, "unit": "ms" },
+  { "indicatorId": "cls", "observed": 0.04, "unit": "1" },
+  { "indicatorId": "js-bytes", "observed": 200, "unit": "KiB" },
+  { "indicatorId": "api_p95", "observed": 320, "unit": "ms", "compliance": 0.995 },
+  { "indicatorId": "api_error_rate", "observed": 0.002, "unit": "1" },
+  { "indicatorId": "agent_smoke", "observed": 1.0, "unit": "1" },
+  { "indicatorId": "monthly_spend", "observed": 82.4, "unit": "USD" }
+]

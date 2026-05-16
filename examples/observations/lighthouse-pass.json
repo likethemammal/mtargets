@@ -1,0 +1,13 @@
+[
+  {
+    "indicatorId": "lcp",
+    "observed": 2100,
+    "unit": "ms",
+    "samples": { "n": 3 },
+    "evidence": [{ "evidenceId": "lhr", "uri": "file://./fixtures/lhr-sample.json" }]
+  },
+  { "indicatorId": "cls", "observed": 0.05, "unit": "1", "samples": { "n": 3 } },
+  { "indicatorId": "tbt", "observed": 150, "unit": "ms", "samples": { "n": 3 } },
+  { "indicatorId": "perf-score", "observed": 0.94, "unit": "score", "samples": { "n": 3 } },
+  { "indicatorId": "js-kib", "observed": 160, "unit": "KiB" }
+]

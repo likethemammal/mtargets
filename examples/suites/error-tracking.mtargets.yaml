@@ -1,0 +1,112 @@
+apiVersion: mtargets/v1
+kind: MetricSuite
+metadata:
+  id: error-tracking
+  title: Error tracking SLO (Sentry / GlitchTip)
+  version: 1.0.0
+  tags: [reliability, sentry, glitchtip]
+  owners: [sre]
+
+spec:
+  intent: |
+    Production error budgets from an error tracker. Use source.type sentry or
+    glitchtip — same query shape; runners differ by API base URL.
+
+  defaults:
+    window: { type: rolling, duration: 24h }
+    missing:
+      behavior: fail
+
+  policy:
+    failOn: [fail, error]
+    warnIsFailure: false
+
+  subjects:
+    - id: checkout-api
+      type: service
+      title: Checkout API
+      selectors:
+        service: checkout-api
+        environment: production
+
+  indicators:
+    - id: error_event_rate
+      title: Error event rate (approx)
+      kind: ratio
+      unit: "1"
+      higherIsWorse: true
+      subjectRef: checkout-api
+      aggregate: rate
+      source:
+        type: sentry
+        query: "is:unresolved event.type:error"
+        params:
+          project: checkout
+          environment: production
+          metric: error_rate
+        credentialsRef: sentry-api-token
+
+    - id: unresolved_issues
+      title: Unresolved issue count
+      kind: count
+      unit: count
+      higherIsWorse: true
+      subjectRef: checkout-api
+      aggregate: last
+      source:
+        type: sentry
+        query: "is:unresolved"
+        params:
+          project: checkout
+          metric: issue_count
+        credentialsRef: sentry-api-token
+
+    # Same targets can be collected from GlitchTip by flipping type + credentials
+    - id: glitchtip_error_rate
+      title: GlitchTip error rate
+      kind: ratio
+      unit: "1"
+      higherIsWorse: true
+      subjectRef: checkout-api
+      aggregate: rate
+      source:
+        type: glitchtip
+        query: "is:unresolved event.type:error"
+        params:
+          project: checkout
+          environment: production
+          metric: error_rate
+          baseUrlEnv: GLITCHTIP_URL
+        credentialsRef: glitchtip-token
+
+  objectives:
+    - id: errors-slo
+      indicator: error_event_rate
+      op: lt
+      value: 0.01
+      severity: error
+      labels: { channel: reliability }
+      evidenceRefs: [issue-search]
+
+    - id: issue-backlog
+      indicator: unresolved_issues
+      op: lte
+      value: 25
+      severity: warn
+      labels: { channel: reliability }
+
+    - id: glitchtip-errors-slo
+      indicator: glitchtip_error_rate
+      op: lt
+      value: 0.01
+      severity: error
+      labels: { channel: reliability }
+      # In real CI you usually enable either sentry *or* glitchtip indicators,
+      # not both — keep both here to show the dual source pattern.
+
+  evidence:
+    - id: issue-search
+      type: report
+      capture: on_fail
+      required: false
+      filter: "is:unresolved event.type:error"

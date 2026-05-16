@@ -1,0 +1,23 @@
+apiVersion: mtargets/v1
+kind: MetricBinding
+metadata:
+  id: api-data-bindings
+  title: API + dataset bindings
+
+spec:
+  suiteId: api-data
+  ui:
+    path: /metrics/api-data
+    groupBy: channel
+  tests:
+    - runner: prometheus
+      maps:
+        api-p95: http_request_duration_seconds
+    - runner: http-inject
+      maps:
+        api-p95-lossy: GET /v1/orders
+    - runner: custom-sql
+      maps:
+        payload-bytes: api.payload_transfer_kib
+        payload-rows: api.payload_row_count
+        schema-age-hours: api.schema_age_hours

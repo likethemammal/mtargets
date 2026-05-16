@@ -1,0 +1,31 @@
+{
+  "fetchTime": "2026-07-10T12:00:00.000Z",
+  "requestedUrl": "https://example.com/",
+  "categories": {
+    "performance": { "id": "performance", "score": 0.94 }
+  },
+  "audits": {
+    "largest-contentful-paint": {
+      "id": "largest-contentful-paint",
+      "numericValue": 2100,
+      "numericUnit": "millisecond"
+    },
+    "cumulative-layout-shift": {
+      "id": "cumulative-layout-shift",
+      "numericValue": 0.05
+    },
+    "total-blocking-time": {
+      "id": "total-blocking-time",
+      "numericValue": 150,
+      "numericUnit": "millisecond"
+    },
+    "resource-summary": {
+      "id": "resource-summary",
+      "details": {
+        "items": [
+          { "resourceType": "script", "transferSize": 163840 }
+        ]
+      }
+    }
+  }
+}

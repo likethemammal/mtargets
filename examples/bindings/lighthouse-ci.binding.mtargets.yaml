@@ -1,0 +1,22 @@
+apiVersion: mtargets/v1
+kind: MetricBinding
+metadata:
+  id: lighthouse-ci-bindings
+  title: Lighthouse CI bindings
+
+spec:
+  suiteId: lighthouse-ci
+  ui:
+    path: /metrics/lighthouse-ci
+    groupBy: channel
+  api:
+    resource: metric-suites
+    id: lighthouse-ci
+  tests:
+    - runner: lighthouse-ci
+      maps:
+        lcp: largest-contentful-paint
+        cls: cumulative-layout-shift
+        tbt: total-blocking-time
+        perf-score: categories:performance
+        js-kib: resource-summary:script:size

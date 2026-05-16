@@ -1,0 +1,9 @@
+[
+  { "indicatorId": "api-p95", "observed": 180, "unit": "ms", "compliance": 0.995 },
+  { "indicatorId": "api-error-rate", "observed": 0.003, "unit": "1" },
+  { "indicatorId": "api-p95-lossy", "observed": 1400, "unit": "ms" },
+  { "indicatorId": "payload-bytes", "observed": 64, "unit": "KiB" },
+  { "indicatorId": "payload-rows", "observed": 50, "unit": "count" },
+  { "indicatorId": "schema-age-hours", "observed": 24, "unit": "count" },
+  { "indicatorId": "flow-completion-rate", "observed": 0.42, "unit": "1" }
+]

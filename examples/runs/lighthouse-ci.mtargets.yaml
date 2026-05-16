@@ -1,0 +1,90 @@
+apiVersion: mtargets/v1
+kind: MetricRun
+metadata:
+  id: run-lighthouse-ci-demo
+  title: Lighthouse CI gate run
+  labels:
+    runner: lighthouse-adapter
+  suiteId: lighthouse-ci
+  suiteVersion: 1.0.0
+spec:
+  startedAt: 2026-07-10T15:48:52.534Z
+  finishedAt: 2026-07-10T15:48:52.535Z
+  status: pass
+  results:
+    - objectiveId: lcp-good
+      indicatorId: lcp
+      status: pass
+      observed: 2100
+      unit: ms
+      threshold:
+        op: lte
+        value: 2500
+      evidence:
+        - evidenceId: lhr
+          uri: file://C:\Users\Dolphin\Desktop\Projects\business\mtargets\examples\fixtures\lhr-sample.json
+          contentType: application/json
+      samples:
+        n: 1
+    - objectiveId: cls-good
+      indicatorId: cls
+      status: pass
+      observed: 0.05
+      unit: "1"
+      threshold:
+        op: lte
+        value: 0.1
+      evidence:
+        - evidenceId: lhr
+          uri: file://C:\Users\Dolphin\Desktop\Projects\business\mtargets\examples\fixtures\lhr-sample.json
+          contentType: application/json
+      samples:
+        n: 1
+    - objectiveId: tbt-budget
+      indicatorId: tbt
+      status: pass
+      observed: 150
+      unit: ms
+      threshold:
+        op: lte
+        value: 200
+      evidence:
+        - evidenceId: lhr
+          uri: file://C:\Users\Dolphin\Desktop\Projects\business\mtargets\examples\fixtures\lhr-sample.json
+          contentType: application/json
+      samples:
+        n: 1
+    - objectiveId: perf-floor
+      indicatorId: perf-score
+      status: pass
+      observed: 0.94
+      unit: score
+      threshold:
+        op: gte
+        value: 0.9
+      evidence:
+        - evidenceId: lhr
+          uri: file://C:\Users\Dolphin\Desktop\Projects\business\mtargets\examples\fixtures\lhr-sample.json
+          contentType: application/json
+      samples:
+        n: 1
+    - objectiveId: js-budget
+      indicatorId: js-kib
+      status: pass
+      observed: 160
+      unit: KiB
+      threshold:
+        op: lte
+        value: 170
+      evidence:
+        - evidenceId: lhr
+          uri: file://C:\Users\Dolphin\Desktop\Projects\business\mtargets\examples\fixtures\lhr-sample.json
+          contentType: application/json
+      samples:
+        n: 1
+  summary:
+    passed: 5
+    warned: 0
+    failed: 0
+    errored: 0
+    skipped: 0

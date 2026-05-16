@@ -1,0 +1,37 @@
+apiVersion: mtargets/v1
+kind: MetricBinding
+metadata:
+  id: ux-granularity-bindings
+  title: UX granularity runner maps
+
+spec:
+  suiteId: ux-granularity
+  ui:
+    path: /metrics/ux-granularity
+    groupBy: channel
+  api:
+    resource: metric-suites
+    id: ux-granularity
+  tests:
+    - runner: lighthouse-ci
+      maps:
+        page-lcp: largest-contentful-paint
+        page-cls: cumulative-layout-shift
+        page-tbt: total-blocking-time
+    - runner: web-vitals-rum
+      maps:
+        page-inp: inp
+    - runner: storybook-playwright
+      maps:
+        pay-click-to-paint: PaymentButton/primary
+        hero-fps: HeroCarousel/autoplay
+    - runner: testing-library
+      maps:
+        auth-provider-mount-ms: AuthProvider
+        hook-render-ms: useCheckoutDraft
+    - runner: script
+      maps:
+        page-js-heap: ../collectors/js-heap.mjs
+        page-dom-nodes: ../collectors/dom-nodes.mjs
+        hero-fps: ../collectors/raf-fps.mjs
+        format-money-ops: ../collectors/microbench.mjs

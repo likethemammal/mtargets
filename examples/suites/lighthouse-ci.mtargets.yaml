@@ -1,0 +1,131 @@
+apiVersion: mtargets/v1
+kind: MetricSuite
+metadata:
+  id: lighthouse-ci
+  title: Lighthouse CI gate
+  version: 1.0.0
+  tags: [ux, lighthouse, ci]
+  owners: [web-platform]
+
+spec:
+  intent: |
+    Lab UX budgets for the marketing home page. Collected by Lighthouse / LHCI;
+    evaluated by mtargets.
+
+  defaults:
+    window: ci
+    missing:
+      behavior: fail
+
+  policy:
+    failOn: [fail, error]
+    warnIsFailure: false
+
+  subjects:
+    - id: home
+      type: surface
+      title: Marketing home
+      selectors:
+        path: /
+        viewport: mobile
+        environment: staging
+
+  indicators:
+    - id: lcp
+      title: Largest Contentful Paint
+      kind: timing
+      unit: ms
+      higherIsWorse: true
+      subjectRef: home
+      aggregate: p75
+      source:
+        type: lighthouse
+        query: largest-contentful-paint
+
+    - id: cls
+      title: Cumulative Layout Shift
+      kind: gauge
+      unit: "1"
+      higherIsWorse: true
+      subjectRef: home
+      aggregate: p75
+      source:
+        type: lighthouse
+        query: cumulative-layout-shift
+
+    - id: tbt
+      title: Total Blocking Time
+      kind: timing
+      unit: ms
+      higherIsWorse: true
+      subjectRef: home
+      aggregate: avg
+      source:
+        type: lighthouse
+        query: total-blocking-time
+
+    - id: perf-score
+      title: Performance category score
+      kind: score
+      unit: score
+      higherIsWorse: false
+      subjectRef: home
+      aggregate: avg
+      source:
+        type: lighthouse
+        query: categories:performance
+
+    - id: js-kib
+      title: Script transfer size
+      kind: gauge
+      unit: KiB
+      higherIsWorse: true
+      subjectRef: home
+      aggregate: sum
+      source:
+        type: resource-budget
+        query: script.transferSize
+
+  objectives:
+    - id: lcp-good
+      indicator: lcp
+      op: lte
+      value: 2500
+      severity: error
+      labels: { channel: ux }
+      evidenceRefs: [lhr]
+
+    - id: cls-good
+      indicator: cls
+      op: lte
+      value: 0.1
+      severity: error
+      labels: { channel: ux }
+
+    - id: tbt-budget
+      indicator: tbt
+      op: lte
+      value: 200
+      severity: warn
+      labels: { channel: ux }
+
+    - id: perf-floor
+      indicator: perf-score
+      op: gte
+      value: 0.9
+      severity: error
+      labels: { channel: ux }
+
+    - id: js-budget
+      indicator: js-kib
+      op: lte
+      value: 170
+      severity: warn
+      labels: { channel: ux }
+
+  evidence:
+    - id: lhr
+      type: report
+      capture: always
+      description: Lighthouse HTML/JSON report
+      required: false

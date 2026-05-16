@@ -1,0 +1,136 @@
+apiVersion: mtargets/v1
+kind: MetricSuite
+metadata:
+  id: custom-product
+  title: Custom product & DX metrics
+  version: 1.0.0
+  tags: [custom, dx, cost, script]
+  owners: [platform]
+
+spec:
+  intent: |
+    Product-specific metrics that are not Lighthouse or Sentry: DX cycle time,
+    queue depth via a script collector, and monthly AI spend soft/hard caps.
+
+  defaults:
+    currency: USD
+    missing:
+      behavior: fail
+
+  policy:
+    failOn: [fail, error]
+    warnIsFailure: false
+
+  subjects:
+    - id: platform
+      type: system
+      title: Operator platform
+      selectors:
+        environment: production
+
+  indicators:
+    - id: brief_time_to_green
+      title: P75 Brief → green Trace (seconds)
+      kind: timing
+      unit: s
+      higherIsWorse: true
+      subjectRef: platform
+      aggregate: p75
+      window: { type: rolling, duration: 7d }
+      source:
+        type: custom
+        query: dx.brief_time_to_green
+        params:
+          table: analytics.brief_cycle
+          percentile: 75
+
+    - id: template_adoption
+      title: Template adoption rate
+      kind: ratio
+      unit: "1"
+      higherIsWorse: false
+      subjectRef: platform
+      aggregate: rate
+      window: { type: calendar, calendar: week }
+      source:
+        type: custom
+        query: dx.template_adoption
+        params:
+          numerator: briefs_from_template
+          denominator: briefs_total
+
+    - id: queue_depth
+      title: Needs-you queue depth
+      kind: gauge
+      unit: count
+      higherIsWorse: true
+      subjectRef: platform
+      aggregate: last
+      window: run
+      source:
+        type: script
+        query: queue_depth
+        params:
+          module: ../collectors/queue-depth.mjs
+          args: ["--queue", "needs-you"]
+
+    - id: monthly_spend
+      title: Monthly AI spend
+      kind: gauge
+      unit: USD
+      higherIsWorse: true
+      scope: suite
+      aggregate: sum
+      window: { type: calendar, calendar: month }
+      source:
+        type: usage
+        query: cost
+        params:
+          currency: USD
+
+  objectives:
+    - id: ttg-target
+      indicator: brief_time_to_green
+      op: lte
+      value: 900
+      severity: warn
+      labels: { channel: dx }
+
+    - id: adoption-floor
+      indicator: template_adoption
+      op: gte
+      value: 0.4
+      severity: warn
+      labels: { channel: dx }
+
+    - id: queue-cap
+      indicator: queue_depth
+      op: lte
+      value: 50
+      severity: error
+      labels: { channel: ops }
+
+    - id: spend-soft
+      indicator: monthly_spend
+      op: lte
+      value: 100
+      severity: warn
+      labels: { channel: cost }
+
+    - id: spend-hard
+      indicator: monthly_spend
+      op: lte
+      value: 150
+      severity: error
+      labels: { channel: cost }
+
+  composites:
+    - id: platform-health
+      title: Platform health gate
+      mode: all
+      severity: error
+      objectives:
+        - ref: queue-cap
+          key: true
+        - ref: spend-hard
+          key: true

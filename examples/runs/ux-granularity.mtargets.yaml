@@ -1,0 +1,147 @@
+apiVersion: mtargets/v1
+kind: MetricRun
+metadata:
+  id: run-ux-granularity-demo
+  title: UX granularity — page, component, unit, provider, hook run
+  labels:
+    runner: ux-granularity-adapter
+  suiteId: ux-granularity
+  suiteVersion: 1.0.0
+spec:
+  startedAt: 2026-07-10T15:55:14.756Z
+  finishedAt: 2026-07-10T15:55:14.756Z
+  status: pass
+  results:
+    - objectiveId: page-lcp-good
+      indicatorId: page-lcp
+      status: pass
+      observed: 2200
+      unit: ms
+      threshold:
+        op: lte
+        value: 2500
+    - objectiveId: page-cls-good
+      indicatorId: page-cls
+      status: pass
+      observed: 0.05
+      unit: "1"
+      threshold:
+        op: lte
+        value: 0.1
+    - objectiveId: page-tbt-jank
+      indicatorId: page-tbt
+      status: pass
+      observed: 140
+      unit: ms
+      threshold:
+        op: lte
+        value: 200
+    - objectiveId: page-inp-jank
+      indicatorId: page-inp
+      status: pass
+      observed: 160
+      unit: ms
+      threshold:
+        op: lte
+        value: 200
+      samples:
+        n: 5000
+    - objectiveId: page-heap-cap
+      indicatorId: page-js-heap
+      status: pass
+      observed: 42
+      unit: MiB
+      threshold:
+        op: lte
+        value: 80
+      message: js_heap after=route-ready (demo)
+    - objectiveId: page-dom-cap
+      indicatorId: page-dom-nodes
+      status: pass
+      observed: 820
+      unit: count
+      threshold:
+        op: lte
+        value: 1500
+      message: dom_node_count (demo)
+    - objectiveId: pay-ctp
+      indicatorId: pay-click-to-paint
+      status: pass
+      observed: 72
+      unit: ms
+      threshold:
+        op: lte
+        value: 100
+    - objectiveId: pay-rerender-cap
+      indicatorId: pay-re-renders
+      status: pass
+      observed: 2
+      unit: count
+      threshold:
+        op: lte
+        value: 3
+    - objectiveId: money-unit-floor
+      indicatorId: format-money-ops
+      status: pass
+      observed: 120000
+      unit: count
+      threshold:
+        op: gte
+        value: 50000
+      message: microbench formatMoney (demo)
+    - objectiveId: auth-mount
+      indicatorId: auth-provider-mount-ms
+      status: pass
+      observed: 8
+      unit: ms
+      threshold:
+        op: lte
+        value: 16
+    - objectiveId: auth-subs
+      indicatorId: auth-provider-subscribers
+      status: pass
+      observed: 12
+      unit: count
+      threshold:
+        op: lte
+        value: 50
+    - objectiveId: hook-render
+      indicatorId: hook-render-ms
+      status: pass
+      observed: 2.5
+      unit: ms
+      threshold:
+        op: lte
+        value: 5
+    - objectiveId: hook-churn
+      indicatorId: hook-effect-churn
+      status: pass
+      observed: 1
+      unit: count
+      threshold:
+        op: lte
+        value: 2
+    - objectiveId: hero-fps-floor
+      indicatorId: hero-fps
+      status: pass
+      observed: 58
+      unit: "1"
+      threshold:
+        op: gte
+        value: 50
+      message: animation_fps durationMs=3000 (demo)
+    - objectiveId: hero-long-frames
+      indicatorId: hero-frame-budget
+      status: pass
+      observed: 2
+      unit: count
+      threshold:
+        op: lte
+        value: 5
+      message: frames over 16.7ms (demo)
+  summary:
+    passed: 15
+    warned: 0
+    failed: 0
+    errored: 0
+    skipped: 0

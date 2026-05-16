@@ -1,0 +1,8 @@
+[
+  { "indicatorId": "lcp-4g", "observed": 2100, "unit": "ms" },
+  { "indicatorId": "lcp-slow-3g", "observed": 4200, "unit": "ms" },
+  { "indicatorId": "tbt-slow-3g", "observed": 480, "unit": "ms" },
+  { "indicatorId": "offline-shell-ready", "observed": 650, "unit": "ms" },
+  { "indicatorId": "offline-mutation-queue", "observed": 4, "unit": "count" },
+  { "indicatorId": "offline-error-rate", "observed": 0.002, "unit": "1" }
+]
