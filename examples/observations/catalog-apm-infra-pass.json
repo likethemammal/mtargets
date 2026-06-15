@@ -1,0 +1,108 @@
+[
+  {
+    "indicatorId": "request-rate",
+    "observed": 120,
+    "unit": "count"
+  },
+  {
+    "indicatorId": "http-5xx-rate",
+    "observed": 0.002,
+    "unit": "1"
+  },
+  {
+    "indicatorId": "latency-p50",
+    "observed": 40,
+    "unit": "ms"
+  },
+  {
+    "indicatorId": "latency-p95",
+    "observed": 180,
+    "unit": "ms",
+    "compliance": 0.995
+  },
+  {
+    "indicatorId": "latency-p99",
+    "observed": 350,
+    "unit": "ms"
+  },
+  {
+    "indicatorId": "apdex",
+    "observed": 0.94,
+    "unit": "score"
+  },
+  {
+    "indicatorId": "availability",
+    "observed": 0.999,
+    "unit": "1"
+  },
+  {
+    "indicatorId": "saturation-queue",
+    "observed": 4,
+    "unit": "count"
+  },
+  {
+    "indicatorId": "cpu-util",
+    "observed": 0.45,
+    "unit": "1"
+  },
+  {
+    "indicatorId": "mem-util",
+    "observed": 0.55,
+    "unit": "1"
+  },
+  {
+    "indicatorId": "disk-util",
+    "observed": 0.2,
+    "unit": "1"
+  },
+  {
+    "indicatorId": "disk-saturation",
+    "observed": 1,
+    "unit": "count"
+  },
+  {
+    "indicatorId": "nic-util",
+    "observed": 0.15,
+    "unit": "1"
+  },
+  {
+    "indicatorId": "nic-errors",
+    "observed": 0,
+    "unit": "count"
+  },
+  {
+    "indicatorId": "db-query-p95",
+    "observed": 25,
+    "unit": "ms"
+  },
+  {
+    "indicatorId": "db-pool-sat",
+    "observed": 0.1,
+    "unit": "1"
+  },
+  {
+    "indicatorId": "server-cache-hit",
+    "observed": 0.9,
+    "unit": "1"
+  },
+  {
+    "indicatorId": "gc-pause",
+    "observed": 5,
+    "unit": "ms"
+  },
+  {
+    "indicatorId": "threadpool-queue",
+    "observed": 2,
+    "unit": "count"
+  },
+  {
+    "indicatorId": "consumer-lag",
+    "observed": 50,
+    "unit": "count"
+  },
+  {
+    "indicatorId": "cold-start",
+    "observed": 400,
+    "unit": "ms"
+  }
+]

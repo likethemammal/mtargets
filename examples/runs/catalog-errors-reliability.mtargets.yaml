@@ -1,0 +1,140 @@
+apiVersion: mtargets/v1
+kind: MetricRun
+metadata:
+  id: run-catalog-errors-reliability
+  title: Errors & reliability (61–75) run
+  labels:
+    runner: evaluate-catalogs
+  suiteId: catalog-errors-reliability
+  suiteVersion: 1.0.0
+spec:
+  startedAt: 2026-07-10T16:11:10.087Z
+  finishedAt: 2026-07-10T16:11:10.087Z
+  status: pass
+  results:
+    - objectiveId: unhandled-exception-rate-obj
+      indicatorId: unhandled-exception-rate
+      status: pass
+      observed: 0.004
+      unit: "1"
+      threshold:
+        op: lt
+        value: 0.01
+    - objectiveId: unresolved-issues-obj
+      indicatorId: unresolved-issues
+      status: pass
+      observed: 12
+      unit: count
+      threshold:
+        op: lte
+        value: 25
+    - objectiveId: crash-free-sessions-obj
+      indicatorId: crash-free-sessions
+      status: pass
+      observed: 0.998
+      unit: "1"
+      threshold:
+        op: gte
+        value: 0.995
+    - objectiveId: crash-free-users-obj
+      indicatorId: crash-free-users
+      status: pass
+      observed: 0.997
+      unit: "1"
+      threshold:
+        op: gte
+        value: 0.99
+    - objectiveId: error-budget-burn-obj
+      indicatorId: error-budget-burn
+      status: pass
+      observed: 0.5
+      unit: "1"
+      threshold:
+        op: lt
+        value: 2
+    - objectiveId: frontend-js-error-rate-obj
+      indicatorId: frontend-js-error-rate
+      status: pass
+      observed: 0.003
+      unit: "1"
+      threshold:
+        op: lt
+        value: 0.01
+    - objectiveId: unhandled-rejection-rate-obj
+      indicatorId: unhandled-rejection-rate
+      status: pass
+      observed: 0.001
+      unit: "1"
+      threshold:
+        op: lt
+        value: 0.005
+    - objectiveId: http-4xx-rate-obj
+      indicatorId: http-4xx-rate
+      status: pass
+      observed: 0.03
+      unit: "1"
+      threshold:
+        op: lt
+        value: 0.1
+    - objectiveId: auth-failure-rate-obj
+      indicatorId: auth-failure-rate
+      status: pass
+      observed: 0.02
+      unit: "1"
+      threshold:
+        op: lt
+        value: 0.05
+    - objectiveId: timeout-rate-obj
+      indicatorId: timeout-rate
+      status: pass
+      observed: 0.001
+      unit: "1"
+      threshold:
+        op: lt
+        value: 0.01
+    - objectiveId: circuit-open-count-obj
+      indicatorId: circuit-open-count
+      status: pass
+      observed: 0
+      unit: count
+      threshold:
+        op: lte
+        value: 5
+    - objectiveId: retry-rate-obj
+      indicatorId: retry-rate
+      status: pass
+      observed: 0.02
+      unit: "1"
+      threshold:
+        op: lt
+        value: 0.1
+    - objectiveId: dlq-depth-obj
+      indicatorId: dlq-depth
+      status: pass
+      observed: 0
+      unit: count
+      threshold:
+        op: lte
+        value: 10
+    - objectiveId: fatal-count-obj
+      indicatorId: fatal-count
+      status: pass
+      observed: 0
+      unit: count
+      threshold:
+        op: eq
+        value: 0
+    - objectiveId: new-unique-issues-obj
+      indicatorId: new-unique-issues
+      status: pass
+      observed: 1
+      unit: count
+      threshold:
+        op: lte
+        value: 5
+  summary:
+    passed: 15
+    warned: 0
+    failed: 0
+    errored: 0
+    skipped: 0

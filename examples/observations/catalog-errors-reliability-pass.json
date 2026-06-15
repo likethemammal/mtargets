@@ -1,0 +1,77 @@
+[
+  {
+    "indicatorId": "unhandled-exception-rate",
+    "observed": 0.004,
+    "unit": "1"
+  },
+  {
+    "indicatorId": "unresolved-issues",
+    "observed": 12,
+    "unit": "count"
+  },
+  {
+    "indicatorId": "crash-free-sessions",
+    "observed": 0.998,
+    "unit": "1"
+  },
+  {
+    "indicatorId": "crash-free-users",
+    "observed": 0.997,
+    "unit": "1"
+  },
+  {
+    "indicatorId": "error-budget-burn",
+    "observed": 0.5,
+    "unit": "1"
+  },
+  {
+    "indicatorId": "frontend-js-error-rate",
+    "observed": 0.003,
+    "unit": "1"
+  },
+  {
+    "indicatorId": "unhandled-rejection-rate",
+    "observed": 0.001,
+    "unit": "1"
+  },
+  {
+    "indicatorId": "http-4xx-rate",
+    "observed": 0.03,
+    "unit": "1"
+  },
+  {
+    "indicatorId": "auth-failure-rate",
+    "observed": 0.02,
+    "unit": "1"
+  },
+  {
+    "indicatorId": "timeout-rate",
+    "observed": 0.001,
+    "unit": "1"
+  },
+  {
+    "indicatorId": "circuit-open-count",
+    "observed": 0,
+    "unit": "count"
+  },
+  {
+    "indicatorId": "retry-rate",
+    "observed": 0.02,
+    "unit": "1"
+  },
+  {
+    "indicatorId": "dlq-depth",
+    "observed": 0,
+    "unit": "count"
+  },
+  {
+    "indicatorId": "fatal-count",
+    "observed": 0,
+    "unit": "count"
+  },
+  {
+    "indicatorId": "new-unique-issues",
+    "observed": 1,
+    "unit": "count"
+  }
+]

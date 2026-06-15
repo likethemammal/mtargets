@@ -1,0 +1,100 @@
+apiVersion: mtargets/v1
+kind: MetricRun
+metadata:
+  id: run-catalog-ux-behavior
+  title: UX behavior & product (91–100) run
+  labels:
+    runner: evaluate-catalogs
+  suiteId: catalog-ux-behavior
+  suiteVersion: 1.0.0
+spec:
+  startedAt: 2026-07-10T16:11:10.110Z
+  finishedAt: 2026-07-10T16:11:10.110Z
+  status: pass
+  results:
+    - objectiveId: rage-clicks-obj
+      indicatorId: rage-clicks
+      status: pass
+      observed: 0.2
+      unit: count
+      threshold:
+        op: lte
+        value: 1
+    - objectiveId: dead-clicks-obj
+      indicatorId: dead-clicks
+      status: pass
+      observed: 0.3
+      unit: count
+      threshold:
+        op: lte
+        value: 1
+    - objectiveId: error-clicks-obj
+      indicatorId: error-clicks
+      status: pass
+      observed: 0.05
+      unit: count
+      threshold:
+        op: lte
+        value: 0.2
+    - objectiveId: thrashed-cursor-obj
+      indicatorId: thrashed-cursor
+      status: pass
+      observed: 0.1
+      unit: count
+      threshold:
+        op: lte
+        value: 1
+    - objectiveId: scroll-depth-obj
+      indicatorId: scroll-depth
+      status: pass
+      observed: 0.65
+      unit: "1"
+      threshold:
+        op: gte
+        value: 0.4
+    - objectiveId: bounce-rate-obj
+      indicatorId: bounce-rate
+      status: pass
+      observed: 0.35
+      unit: "1"
+      threshold:
+        op: lt
+        value: 0.55
+    - objectiveId: session-duration-obj
+      indicatorId: session-duration
+      status: pass
+      observed: 180
+      unit: s
+      threshold:
+        op: gte
+        value: 60
+    - objectiveId: task-success-rate-obj
+      indicatorId: task-success-rate
+      status: pass
+      observed: 0.82
+      unit: "1"
+      threshold:
+        op: gte
+        value: 0.7
+    - objectiveId: form-abandonment-obj
+      indicatorId: form-abandonment
+      status: pass
+      observed: 0.25
+      unit: "1"
+      threshold:
+        op: lt
+        value: 0.4
+    - objectiveId: conversion-rate-obj
+      indicatorId: conversion-rate
+      status: pass
+      observed: 0.42
+      unit: "1"
+      threshold:
+        op: gte
+        value: 0.35
+  summary:
+    passed: 10
+    warned: 0
+    failed: 0
+    errored: 0
+    skipped: 0

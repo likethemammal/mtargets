@@ -1,0 +1,189 @@
+apiVersion: mtargets/v1
+kind: MetricRun
+metadata:
+  id: run-catalog-apm-infra
+  title: APM & infrastructure (41–60) run
+  labels:
+    runner: evaluate-catalogs
+  suiteId: catalog-apm-infra
+  suiteVersion: 1.0.0
+spec:
+  startedAt: 2026-07-10T16:11:10.070Z
+  finishedAt: 2026-07-10T16:11:10.071Z
+  status: pass
+  results:
+    - objectiveId: request-rate-obj
+      indicatorId: request-rate
+      status: pass
+      observed: 120
+      unit: count
+      threshold:
+        op: gte
+        value: 1
+    - objectiveId: http-5xx-rate-obj
+      indicatorId: http-5xx-rate
+      status: pass
+      observed: 0.002
+      unit: "1"
+      threshold:
+        op: lt
+        value: 0.01
+    - objectiveId: latency-p50-obj
+      indicatorId: latency-p50
+      status: pass
+      observed: 40
+      unit: ms
+      threshold:
+        op: lt
+        value: 100
+    - objectiveId: latency-p95-obj
+      indicatorId: latency-p95
+      status: pass
+      observed: 180
+      unit: ms
+      threshold:
+        op: lt
+        value: 300
+      compliance: 0.995
+    - objectiveId: latency-p99-obj
+      indicatorId: latency-p99
+      status: pass
+      observed: 350
+      unit: ms
+      threshold:
+        op: lt
+        value: 500
+    - objectiveId: apdex-obj
+      indicatorId: apdex
+      status: pass
+      observed: 0.94
+      unit: score
+      threshold:
+        op: gte
+        value: 0.9
+    - objectiveId: availability-obj
+      indicatorId: availability
+      status: pass
+      observed: 0.999
+      unit: "1"
+      threshold:
+        op: gte
+        value: 0.995
+    - objectiveId: saturation-queue-obj
+      indicatorId: saturation-queue
+      status: pass
+      observed: 4
+      unit: count
+      threshold:
+        op: lte
+        value: 50
+    - objectiveId: cpu-util-obj
+      indicatorId: cpu-util
+      status: pass
+      observed: 0.45
+      unit: "1"
+      threshold:
+        op: lte
+        value: 0.85
+    - objectiveId: mem-util-obj
+      indicatorId: mem-util
+      status: pass
+      observed: 0.55
+      unit: "1"
+      threshold:
+        op: lte
+        value: 0.9
+    - objectiveId: disk-util-obj
+      indicatorId: disk-util
+      status: pass
+      observed: 0.2
+      unit: "1"
+      threshold:
+        op: lte
+        value: 0.8
+    - objectiveId: disk-saturation-obj
+      indicatorId: disk-saturation
+      status: pass
+      observed: 1
+      unit: count
+      threshold:
+        op: lte
+        value: 8
+    - objectiveId: nic-util-obj
+      indicatorId: nic-util
+      status: pass
+      observed: 0.15
+      unit: "1"
+      threshold:
+        op: lte
+        value: 0.8
+    - objectiveId: nic-errors-obj
+      indicatorId: nic-errors
+      status: pass
+      observed: 0
+      unit: count
+      threshold:
+        op: lte
+        value: 10
+    - objectiveId: db-query-p95-obj
+      indicatorId: db-query-p95
+      status: pass
+      observed: 25
+      unit: ms
+      threshold:
+        op: lt
+        value: 100
+    - objectiveId: db-pool-sat-obj
+      indicatorId: db-pool-sat
+      status: pass
+      observed: 0.1
+      unit: "1"
+      threshold:
+        op: lte
+        value: 0.5
+    - objectiveId: server-cache-hit-obj
+      indicatorId: server-cache-hit
+      status: pass
+      observed: 0.9
+      unit: "1"
+      threshold:
+        op: gte
+        value: 0.8
+    - objectiveId: gc-pause-obj
+      indicatorId: gc-pause
+      status: pass
+      observed: 5
+      unit: ms
+      threshold:
+        op: lte
+        value: 50
+    - objectiveId: threadpool-queue-obj
+      indicatorId: threadpool-queue
+      status: pass
+      observed: 2
+      unit: count
+      threshold:
+        op: lte
+        value: 100
+    - objectiveId: consumer-lag-obj
+      indicatorId: consumer-lag
+      status: pass
+      observed: 50
+      unit: count
+      threshold:
+        op: lte
+        value: 1000
+    - objectiveId: cold-start-obj
+      indicatorId: cold-start
+      status: pass
+      observed: 400
+      unit: ms
+      threshold:
+        op: lte
+        value: 1000
+  summary:
+    passed: 21
+    warned: 0
+    failed: 0
+    errored: 0
+    skipped: 0

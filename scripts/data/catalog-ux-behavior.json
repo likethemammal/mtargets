@@ -1,0 +1,22 @@
+{
+  "catalogId": "catalog-ux-behavior",
+  "title": "UX behavior & product (91–100)",
+  "tags": ["ux", "rum", "frustration", "funnel"],
+  "intent": "Frustration signals, engagement, and funnel metrics as full mtargets indicators.",
+  "subjects": [
+    { "id": "product", "type": "surface", "title": "Product web app", "selectors": { "path": "/*", "environment": "production" } },
+    { "id": "checkout-flow", "type": "flow", "title": "Checkout funnel", "selectors": { "entry": "/cart", "exit": "/confirm", "steps": ["cart", "shipping", "pay", "confirm"] } }
+  ],
+  "indicators": [
+    { "id": "rage-clicks", "title": "Rage clicks per session", "kind": "gauge", "unit": "count", "subjectRef": "product", "aggregate": "avg", "window": { "type": "rolling", "duration": "24h" }, "source": { "type": "events", "query": "frustration.rage_click", "params": { "per": "session" } }, "demo": 0.2, "op": "lte", "value": 1, "severity": "warn" },
+    { "id": "dead-clicks", "title": "Dead clicks per session", "kind": "gauge", "unit": "count", "subjectRef": "product", "aggregate": "avg", "source": { "type": "events", "query": "frustration.dead_click", "params": { "per": "session" } }, "demo": 0.3, "op": "lte", "value": 1, "severity": "warn" },
+    { "id": "error-clicks", "title": "Error clicks per session", "kind": "gauge", "unit": "count", "subjectRef": "product", "aggregate": "avg", "source": { "type": "events", "query": "frustration.error_click", "params": { "per": "session" } }, "demo": 0.05, "op": "lte", "value": 0.2 },
+    { "id": "thrashed-cursor", "title": "Thrashed cursor events per session", "kind": "gauge", "unit": "count", "subjectRef": "product", "aggregate": "avg", "source": { "type": "events", "query": "frustration.thrashed_cursor" }, "demo": 0.1, "op": "lte", "value": 1, "severity": "info" },
+    { "id": "scroll-depth", "title": "Median scroll depth", "kind": "gauge", "unit": "1", "higherIsWorse": false, "subjectRef": "product", "aggregate": "p50", "source": { "type": "custom", "query": "rum.scroll_depth_ratio" }, "demo": 0.65, "op": "gte", "value": 0.4, "severity": "info" },
+    { "id": "bounce-rate", "title": "Bounce rate", "kind": "ratio", "unit": "1", "subjectRef": "product", "aggregate": "rate", "source": { "type": "events", "bad": { "bounce": true }, "total": { "session": true } }, "demo": 0.35, "op": "lt", "value": 0.55, "severity": "warn" },
+    { "id": "session-duration", "title": "Session duration", "kind": "timing", "unit": "s", "higherIsWorse": false, "subjectRef": "product", "aggregate": "p50", "source": { "type": "custom", "query": "rum.session_duration_seconds" }, "demo": 180, "op": "gte", "value": 60, "severity": "info" },
+    { "id": "task-success-rate", "title": "Task success rate", "kind": "ratio", "unit": "1", "higherIsWorse": false, "subjectRef": "checkout-flow", "aggregate": "rate", "source": { "type": "events", "good": { "event": "task_success" }, "total": { "event": "task_start" } }, "demo": 0.82, "op": "gte", "value": 0.7 },
+    { "id": "form-abandonment", "title": "Form abandonment rate", "kind": "ratio", "unit": "1", "subjectRef": "product", "aggregate": "rate", "source": { "type": "events", "bad": { "event": "form_abandon" }, "total": { "event": "form_start" } }, "demo": 0.25, "op": "lt", "value": 0.4, "severity": "warn" },
+    { "id": "conversion-rate", "title": "Checkout conversion rate", "kind": "ratio", "unit": "1", "higherIsWorse": false, "subjectRef": "checkout-flow", "aggregate": "rate", "window": { "type": "rolling", "duration": "24h" }, "source": { "type": "events", "good": { "event": "checkout_confirm" }, "total": { "event": "cart_view" } }, "demo": 0.42, "op": "gte", "value": 0.35, "severity": "warn" }
+  ]
+}

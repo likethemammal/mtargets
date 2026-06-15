@@ -1,0 +1,147 @@
+# Generated — imports catalog and defines an objective per indicator
+apiVersion: mtargets/v1
+kind: MetricSuite
+metadata:
+  id: catalog-errors-reliability
+  title: Errors & reliability (61–75)
+  version: 1.0.0
+  tags:
+    - errors
+    - sentry
+    - reliability
+    - slo
+spec:
+  intent: Error-tracker, crash-free, budget burn, timeouts, retries, and related
+    reliability metrics.
+  imports:
+    - catalog: ../catalogs/catalog-errors-reliability.mtargets.yaml
+  indicators: []
+  defaults:
+    missing:
+      behavior: fail
+  policy:
+    failOn:
+      - fail
+      - error
+    warnIsFailure: false
+  objectives:
+    - id: unhandled-exception-rate-obj
+      title: Unhandled exception rate
+      indicator: unhandled-exception-rate
+      op: lt
+      value: 0.01
+      severity: error
+      labels:
+        catalog: full
+    - id: unresolved-issues-obj
+      title: Unresolved issue count
+      indicator: unresolved-issues
+      op: lte
+      value: 25
+      severity: warn
+      labels:
+        catalog: full
+    - id: crash-free-sessions-obj
+      title: Crash-free sessions
+      indicator: crash-free-sessions
+      op: gte
+      value: 0.995
+      severity: error
+      labels:
+        catalog: full
+    - id: crash-free-users-obj
+      title: Crash-free users
+      indicator: crash-free-users
+      op: gte
+      value: 0.99
+      severity: warn
+      labels:
+        catalog: full
+    - id: error-budget-burn-obj
+      title: Error budget burn rate (1h)
+      indicator: error-budget-burn
+      op: lt
+      value: 2
+      severity: warn
+      labels:
+        catalog: full
+    - id: frontend-js-error-rate-obj
+      title: Frontend JS error rate
+      indicator: frontend-js-error-rate
+      op: lt
+      value: 0.01
+      severity: error
+      labels:
+        catalog: full
+    - id: unhandled-rejection-rate-obj
+      title: Unhandled promise rejection rate
+      indicator: unhandled-rejection-rate
+      op: lt
+      value: 0.005
+      severity: warn
+      labels:
+        catalog: full
+    - id: http-4xx-rate-obj
+      title: HTTP 4xx rate
+      indicator: http-4xx-rate
+      op: lt
+      value: 0.1
+      severity: warn
+      labels:
+        catalog: full
+    - id: auth-failure-rate-obj
+      title: Auth failure rate
+      indicator: auth-failure-rate
+      op: lt
+      value: 0.05
+      severity: warn
+      labels:
+        catalog: full
+    - id: timeout-rate-obj
+      title: Request timeout rate
+      indicator: timeout-rate
+      op: lt
+      value: 0.01
+      severity: error
+      labels:
+        catalog: full
+    - id: circuit-open-count-obj
+      title: Circuit breaker opens
+      indicator: circuit-open-count
+      op: lte
+      value: 5
+      severity: warn
+      labels:
+        catalog: full
+    - id: retry-rate-obj
+      title: Client retry rate
+      indicator: retry-rate
+      op: lt
+      value: 0.1
+      severity: warn
+      labels:
+        catalog: full
+    - id: dlq-depth-obj
+      title: Dead letter queue depth
+      indicator: dlq-depth
+      op: lte
+      value: 10
+      severity: warn
+      labels:
+        catalog: full
+    - id: fatal-count-obj
+      title: Fatal / panic count
+      indicator: fatal-count
+      op: eq
+      value: 0
+      severity: error
+      labels:
+        catalog: full
+    - id: new-unique-issues-obj
+      title: New unique issues
+      indicator: new-unique-issues
+      op: lte
+      value: 5
+      severity: warn
+      labels:
+        catalog: full

@@ -1,0 +1,196 @@
+# Generated — imports catalog and defines an objective per indicator
+apiVersion: mtargets/v1
+kind: MetricSuite
+metadata:
+  id: catalog-apm-infra
+  title: APM & infrastructure (41–60)
+  version: 1.0.0
+  tags:
+    - apm
+    - red
+    - use
+    - infra
+spec:
+  intent: RED/USE/golden-signal style service and resource metrics with full
+    indicator definitions.
+  imports:
+    - catalog: ../catalogs/catalog-apm-infra.mtargets.yaml
+  indicators: []
+  defaults:
+    missing:
+      behavior: fail
+  policy:
+    failOn:
+      - fail
+      - error
+    warnIsFailure: false
+  objectives:
+    - id: request-rate-obj
+      title: Request rate (RPS)
+      indicator: request-rate
+      op: gte
+      value: 1
+      severity: info
+      labels:
+        catalog: full
+    - id: http-5xx-rate-obj
+      title: HTTP 5xx error rate
+      indicator: http-5xx-rate
+      op: lt
+      value: 0.01
+      severity: error
+      labels:
+        catalog: full
+    - id: latency-p50-obj
+      title: Latency p50
+      indicator: latency-p50
+      op: lt
+      value: 100
+      severity: warn
+      labels:
+        catalog: full
+    - id: latency-p95-obj
+      title: Latency p95
+      indicator: latency-p95
+      op: lt
+      value: 300
+      severity: error
+      labels:
+        catalog: full
+      target: 0.99
+    - id: latency-p99-obj
+      title: Latency p99
+      indicator: latency-p99
+      op: lt
+      value: 500
+      severity: warn
+      labels:
+        catalog: full
+    - id: apdex-obj
+      title: Apdex score
+      indicator: apdex
+      op: gte
+      value: 0.9
+      severity: error
+      labels:
+        catalog: full
+    - id: availability-obj
+      title: Availability
+      indicator: availability
+      op: gte
+      value: 0.995
+      severity: error
+      labels:
+        catalog: full
+    - id: saturation-queue-obj
+      title: Request queue depth (saturation)
+      indicator: saturation-queue
+      op: lte
+      value: 50
+      severity: warn
+      labels:
+        catalog: full
+    - id: cpu-util-obj
+      title: CPU utilization
+      indicator: cpu-util
+      op: lte
+      value: 0.85
+      severity: warn
+      labels:
+        catalog: full
+    - id: mem-util-obj
+      title: Memory utilization
+      indicator: mem-util
+      op: lte
+      value: 0.9
+      severity: warn
+      labels:
+        catalog: full
+    - id: disk-util-obj
+      title: Disk I/O utilization
+      indicator: disk-util
+      op: lte
+      value: 0.8
+      severity: warn
+      labels:
+        catalog: full
+    - id: disk-saturation-obj
+      title: Disk queue saturation
+      indicator: disk-saturation
+      op: lte
+      value: 8
+      severity: warn
+      labels:
+        catalog: full
+    - id: nic-util-obj
+      title: Network bandwidth utilization
+      indicator: nic-util
+      op: lte
+      value: 0.8
+      severity: warn
+      labels:
+        catalog: full
+    - id: nic-errors-obj
+      title: Network interface errors
+      indicator: nic-errors
+      op: lte
+      value: 10
+      severity: warn
+      labels:
+        catalog: full
+    - id: db-query-p95-obj
+      title: DB query latency p95
+      indicator: db-query-p95
+      op: lt
+      value: 100
+      severity: error
+      labels:
+        catalog: full
+    - id: db-pool-sat-obj
+      title: DB pool saturation
+      indicator: db-pool-sat
+      op: lte
+      value: 0.5
+      severity: warn
+      labels:
+        catalog: full
+    - id: server-cache-hit-obj
+      title: Server cache hit ratio
+      indicator: server-cache-hit
+      op: gte
+      value: 0.8
+      severity: warn
+      labels:
+        catalog: full
+    - id: gc-pause-obj
+      title: GC pause time
+      indicator: gc-pause
+      op: lte
+      value: 50
+      severity: warn
+      labels:
+        catalog: full
+    - id: threadpool-queue-obj
+      title: Thread pool queue depth
+      indicator: threadpool-queue
+      op: lte
+      value: 100
+      severity: warn
+      labels:
+        catalog: full
+    - id: consumer-lag-obj
+      title: Message consumer lag
+      indicator: consumer-lag
+      op: lte
+      value: 1000
+      severity: warn
+      labels:
+        catalog: full
+    - id: cold-start-obj
+      title: Serverless cold start
+      indicator: cold-start
+      op: lte
+      value: 1000
+      severity: warn
+      labels:
+        catalog: full

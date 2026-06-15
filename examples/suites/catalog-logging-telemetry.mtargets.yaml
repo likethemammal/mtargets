@@ -1,0 +1,147 @@
+# Generated — imports catalog and defines an objective per indicator
+apiVersion: mtargets/v1
+kind: MetricSuite
+metadata:
+  id: catalog-logging-telemetry
+  title: Logging & telemetry health (76–90)
+  version: 1.0.0
+  tags:
+    - logging
+    - otel
+    - cardinality
+    - traces
+spec:
+  intent: Log volume, severity rates, ingest lag, cardinality, correlation, and
+    dropped telemetry.
+  imports:
+    - catalog: ../catalogs/catalog-logging-telemetry.mtargets.yaml
+  indicators: []
+  defaults:
+    missing:
+      behavior: fail
+  policy:
+    failOn:
+      - fail
+      - error
+    warnIsFailure: false
+  objectives:
+    - id: log-volume-eps-obj
+      title: Log volume (events/s)
+      indicator: log-volume-eps
+      op: lte
+      value: 5000
+      severity: warn
+      labels:
+        catalog: full
+    - id: error-log-rate-obj
+      title: Error-severity log rate
+      indicator: error-log-rate
+      op: lte
+      value: 50
+      severity: warn
+      labels:
+        catalog: full
+    - id: warn-log-rate-obj
+      title: Warn log rate
+      indicator: warn-log-rate
+      op: lte
+      value: 200
+      severity: info
+      labels:
+        catalog: full
+    - id: log-ingest-lag-obj
+      title: Log ingest lag
+      indicator: log-ingest-lag
+      op: lte
+      value: 30
+      severity: warn
+      labels:
+        catalog: full
+    - id: metric-cardinality-obj
+      title: Active metric series cardinality
+      indicator: metric-cardinality
+      op: lte
+      value: 500000
+      severity: warn
+      labels:
+        catalog: full
+    - id: pii-in-logs-obj
+      title: PII detections in logs
+      indicator: pii-in-logs
+      op: eq
+      value: 0
+      severity: error
+      labels:
+        catalog: full
+    - id: log-parse-failure-rate-obj
+      title: Log parse failure rate
+      indicator: log-parse-failure-rate
+      op: lt
+      value: 0.01
+      severity: warn
+      labels:
+        catalog: full
+    - id: span-error-rate-obj
+      title: Trace span error rate
+      indicator: span-error-rate
+      op: lt
+      value: 0.02
+      severity: error
+      labels:
+        catalog: full
+    - id: trace-sample-rate-obj
+      title: Observed trace sample rate
+      indicator: trace-sample-rate
+      op: gte
+      value: 0.01
+      severity: info
+      labels:
+        catalog: full
+    - id: span-duration-p95-obj
+      title: Span duration p95
+      indicator: span-duration-p95
+      op: lt
+      value: 500
+      severity: warn
+      labels:
+        catalog: full
+    - id: logs-derived-errors-obj
+      title: Logs-to-metrics error count
+      indicator: logs-derived-errors
+      op: lte
+      value: 50
+      severity: warn
+      labels:
+        catalog: full
+    - id: mttr-hours-obj
+      title: MTTR (hours)
+      indicator: mttr-hours
+      op: lte
+      value: 14400
+      severity: warn
+      labels:
+        catalog: full
+    - id: log-retention-coverage-obj
+      title: Log retention coverage
+      indicator: log-retention-coverage
+      op: gte
+      value: 0.95
+      severity: warn
+      labels:
+        catalog: full
+    - id: trace-id-present-obj
+      title: Logs with trace_id present
+      indicator: trace-id-present
+      op: gte
+      value: 0.8
+      severity: warn
+      labels:
+        catalog: full
+    - id: dropped-telemetry-rate-obj
+      title: Dropped telemetry rate
+      indicator: dropped-telemetry-rate
+      op: lt
+      value: 0.01
+      severity: warn
+      labels:
+        catalog: full

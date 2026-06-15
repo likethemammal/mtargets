@@ -1,0 +1,61 @@
+{
+  "bundles": [
+    {
+      "catalogId": "catalog-web-ux-perf",
+      "title": "Web & UX performance (1–40)",
+      "tags": ["web", "ux", "lighthouse", "rum"],
+      "intent": "Full examples for Core Web Vitals, lab diagnostics, resource budgets, navigation timing, jank, animation, and memory.",
+      "subjects": [
+        {
+          "id": "page",
+          "type": "surface",
+          "title": "Primary page",
+          "selectors": { "path": "/", "viewport": "mobile", "network": "4g" }
+        }
+      ],
+      "indicators": [
+        { "id": "lcp", "title": "Largest Contentful Paint", "kind": "timing", "unit": "ms", "aggregate": "p75", "window": { "type": "rolling", "duration": "28d" }, "source": { "type": "web-vitals", "query": "lcp" }, "demo": 2200, "op": "lte", "value": 2500 },
+        { "id": "inp", "title": "Interaction to Next Paint", "kind": "timing", "unit": "ms", "aggregate": "p75", "window": { "type": "rolling", "duration": "28d" }, "source": { "type": "web-vitals", "query": "inp" }, "demo": 160, "op": "lte", "value": 200 },
+        { "id": "cls", "title": "Cumulative Layout Shift", "kind": "gauge", "unit": "1", "aggregate": "p75", "window": { "type": "rolling", "duration": "28d" }, "source": { "type": "web-vitals", "query": "cls" }, "demo": 0.05, "op": "lte", "value": 0.1 },
+        { "id": "fcp", "title": "First Contentful Paint", "kind": "timing", "unit": "ms", "aggregate": "p75", "source": { "type": "web-vitals", "query": "fcp" }, "demo": 1400, "op": "lte", "value": 1800, "severity": "warn" },
+        { "id": "ttfb", "title": "Time to First Byte", "kind": "timing", "unit": "ms", "aggregate": "p75", "source": { "type": "web-vitals", "query": "ttfb" }, "demo": 500, "op": "lte", "value": 800, "severity": "warn" },
+        { "id": "tbt", "title": "Total Blocking Time", "kind": "timing", "unit": "ms", "aggregate": "avg", "source": { "type": "lighthouse", "query": "total-blocking-time" }, "demo": 150, "op": "lte", "value": 200, "severity": "warn" },
+        { "id": "speed-index", "title": "Speed Index", "kind": "timing", "unit": "ms", "aggregate": "avg", "source": { "type": "lighthouse", "query": "speed-index" }, "demo": 2800, "op": "lte", "value": 3400, "severity": "warn" },
+        { "id": "tti", "title": "Time to Interactive", "kind": "timing", "unit": "ms", "aggregate": "avg", "source": { "type": "lighthouse", "query": "interactive" }, "demo": 3200, "op": "lte", "value": 3800, "severity": "warn" },
+        { "id": "dcl", "title": "DOM Content Loaded", "kind": "timing", "unit": "ms", "aggregate": "p75", "source": { "type": "custom", "query": "nav.dom_content_loaded" }, "demo": 900, "op": "lte", "value": 1500, "severity": "warn" },
+        { "id": "load-complete", "title": "Window load event", "kind": "timing", "unit": "ms", "aggregate": "p75", "source": { "type": "custom", "query": "nav.load_event_end" }, "demo": 2500, "op": "lte", "value": 4000, "severity": "warn" },
+        { "id": "fid", "title": "First Input Delay (legacy)", "kind": "timing", "unit": "ms", "aggregate": "p75", "source": { "type": "web-vitals", "query": "fid" }, "demo": 40, "op": "lte", "value": 100, "severity": "info" },
+        { "id": "max-potential-fid", "title": "Max Potential FID", "kind": "timing", "unit": "ms", "aggregate": "avg", "source": { "type": "lighthouse", "query": "max-potential-fid" }, "demo": 80, "op": "lte", "value": 130, "severity": "warn" },
+        { "id": "time-to-hero", "title": "Time to hero element", "kind": "timing", "unit": "ms", "aggregate": "p75", "source": { "type": "custom", "query": "paint.hero", "params": { "selector": "[data-hero]" } }, "demo": 1800, "op": "lte", "value": 2500 },
+        { "id": "soft-nav-lcp", "title": "Soft navigation LCP", "kind": "timing", "unit": "ms", "aggregate": "p75", "source": { "type": "web-vitals", "query": "lcp", "params": { "softNavigation": true } }, "demo": 900, "op": "lte", "value": 2000, "severity": "warn" },
+        { "id": "transfer-total", "title": "Total transfer size", "kind": "gauge", "unit": "KiB", "aggregate": "sum", "source": { "type": "resource-budget", "query": "total.transferSize" }, "demo": 600, "op": "lte", "value": 700, "severity": "warn" },
+        { "id": "js-bytes", "title": "JavaScript transfer size", "kind": "gauge", "unit": "KiB", "aggregate": "sum", "source": { "type": "resource-budget", "query": "script.transferSize" }, "demo": 150, "op": "lte", "value": 170 },
+        { "id": "css-bytes", "title": "CSS transfer size", "kind": "gauge", "unit": "KiB", "aggregate": "sum", "source": { "type": "resource-budget", "query": "stylesheet.transferSize" }, "demo": 40, "op": "lte", "value": 60, "severity": "warn" },
+        { "id": "image-bytes", "title": "Image transfer size", "kind": "gauge", "unit": "KiB", "aggregate": "sum", "source": { "type": "resource-budget", "query": "image.transferSize" }, "demo": 200, "op": "lte", "value": 400, "severity": "warn" },
+        { "id": "font-bytes", "title": "Font transfer size", "kind": "gauge", "unit": "KiB", "aggregate": "sum", "source": { "type": "resource-budget", "query": "font.transferSize" }, "demo": 60, "op": "lte", "value": 100, "severity": "warn" },
+        { "id": "third-party-count", "title": "Third-party request count", "kind": "count", "unit": "count", "aggregate": "sum", "source": { "type": "resource-budget", "query": "third-party.count" }, "demo": 6, "op": "lte", "value": 10, "severity": "warn" },
+        { "id": "request-count", "title": "Total request count", "kind": "count", "unit": "count", "aggregate": "sum", "source": { "type": "resource-budget", "query": "total.count" }, "demo": 40, "op": "lte", "value": 60, "severity": "warn" },
+        { "id": "critical-chain-depth", "title": "Critical request chain depth", "kind": "gauge", "unit": "count", "aggregate": "max", "source": { "type": "lighthouse", "query": "critical-request-chains" }, "demo": 2, "op": "lte", "value": 3, "severity": "warn" },
+        { "id": "render-blocking-count", "title": "Render-blocking resources", "kind": "count", "unit": "count", "aggregate": "sum", "source": { "type": "lighthouse", "query": "render-blocking-resources" }, "demo": 2, "op": "lte", "value": 4, "severity": "warn" },
+        { "id": "unused-js", "title": "Unused JavaScript bytes", "kind": "gauge", "unit": "KiB", "aggregate": "sum", "source": { "type": "lighthouse", "query": "unused-javascript" }, "demo": 40, "op": "lte", "value": 100, "severity": "warn" },
+        { "id": "unused-css", "title": "Unused CSS bytes", "kind": "gauge", "unit": "KiB", "aggregate": "sum", "source": { "type": "lighthouse", "query": "unused-css-rules" }, "demo": 15, "op": "lte", "value": 40, "severity": "warn" },
+        { "id": "browser-cache-hit-ratio", "title": "Browser cache hit ratio", "kind": "ratio", "unit": "1", "higherIsWorse": false, "aggregate": "rate", "window": { "type": "rolling", "duration": "24h" }, "source": { "type": "custom", "query": "cache.browser_hit_ratio", "good": { "hit": true }, "total": { "cacheable": true } }, "demo": 0.85, "op": "gte", "value": 0.7, "severity": "warn" },
+        { "id": "cdn-edge-latency", "title": "CDN edge latency", "kind": "timing", "unit": "ms", "aggregate": "p95", "source": { "type": "http", "query": { "method": "GET", "path": "/" }, "params": { "probe": "cdn-edge" } }, "demo": 40, "op": "lt", "value": 100, "severity": "warn" },
+        { "id": "dns-time", "title": "DNS lookup time", "kind": "timing", "unit": "ms", "aggregate": "p75", "source": { "type": "custom", "query": "nav.domain_lookup" }, "demo": 20, "op": "lte", "value": 50, "severity": "warn" },
+        { "id": "tcp-tls-time", "title": "TCP+TLS connect time", "kind": "timing", "unit": "ms", "aggregate": "p75", "source": { "type": "custom", "query": "nav.connect_secure" }, "demo": 60, "op": "lte", "value": 150, "severity": "warn" },
+        { "id": "redirect-time", "title": "Redirect time", "kind": "timing", "unit": "ms", "aggregate": "p75", "source": { "type": "custom", "query": "nav.redirect" }, "demo": 0, "op": "lte", "value": 100, "severity": "warn" },
+        { "id": "long-task-count", "title": "Long tasks (>50ms) count", "kind": "count", "unit": "count", "aggregate": "sum", "source": { "type": "script", "query": "long_task_count", "params": { "module": "../collectors/long-tasks.mjs" } }, "demo": 3, "op": "lte", "value": 10, "severity": "warn" },
+        { "id": "long-task-blocking", "title": "Long task blocking sum", "kind": "timing", "unit": "ms", "aggregate": "sum", "source": { "type": "script", "query": "long_task_blocking_ms", "params": { "module": "../collectors/long-tasks.mjs" } }, "demo": 120, "op": "lte", "value": 200, "severity": "warn" },
+        { "id": "animation-fps", "title": "Animation FPS", "kind": "gauge", "unit": "1", "higherIsWorse": false, "aggregate": "avg", "source": { "type": "script", "query": "animation_fps", "params": { "module": "../collectors/raf-fps.mjs", "durationMs": 3000 } }, "demo": 58, "op": "gte", "value": 50 },
+        { "id": "long-frames", "title": "Frames over 16.7ms", "kind": "count", "unit": "count", "aggregate": "sum", "source": { "type": "script", "query": "long_frames", "params": { "module": "../collectors/raf-fps.mjs", "budgetMs": 16.7 } }, "demo": 2, "op": "lte", "value": 5, "severity": "warn" },
+        { "id": "js-heap", "title": "JS heap used", "kind": "gauge", "unit": "MiB", "aggregate": "last", "source": { "type": "script", "query": "js_heap_mib", "params": { "module": "../collectors/js-heap.mjs", "after": "route-ready" } }, "demo": 42, "op": "lte", "value": 80, "severity": "warn" },
+        { "id": "dom-nodes", "title": "DOM node count", "kind": "count", "unit": "count", "aggregate": "last", "source": { "type": "script", "query": "dom_node_count", "params": { "module": "../collectors/dom-nodes.mjs" } }, "demo": 820, "op": "lte", "value": 1500, "severity": "warn" },
+        { "id": "layout-thrash", "title": "Layout thrashing count", "kind": "count", "unit": "count", "aggregate": "sum", "source": { "type": "script", "query": "layout_thrash_count", "params": { "module": "../collectors/layout-thrash.mjs" } }, "demo": 1, "op": "lte", "value": 5, "severity": "warn" },
+        { "id": "scroll-latency", "title": "Scroll interaction latency", "kind": "timing", "unit": "ms", "aggregate": "p95", "source": { "type": "custom", "query": "ux.scroll_latency_ms" }, "demo": 12, "op": "lte", "value": 20, "severity": "warn" },
+        { "id": "hydration-ms", "title": "SSR hydration duration", "kind": "timing", "unit": "ms", "aggregate": "p95", "source": { "type": "custom", "query": "ssr.hydration_ms" }, "demo": 180, "op": "lte", "value": 300, "severity": "warn" },
+        { "id": "lh-perf-score", "title": "Lighthouse performance score", "kind": "score", "unit": "score", "higherIsWorse": false, "aggregate": "avg", "source": { "type": "lighthouse", "query": "categories:performance" }, "demo": 0.92, "op": "gte", "value": 0.9 }
+      ],
+      "defaultSubjectRef": "page"
+    }
+  ]
+}

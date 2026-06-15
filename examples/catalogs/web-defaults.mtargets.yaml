@@ -1,0 +1,38 @@
+apiVersion: mtargets/v1
+kind: MetricCatalog
+metadata:
+  id: web-defaults
+  title: Web defaults catalog
+  version: 1.0.0
+  tags: [ux, web]
+
+spec:
+  subjects:
+    - id: default-web
+      type: surface
+      title: Default web surface
+      selectors:
+        viewport: mobile
+
+  indicators:
+    - id: catalog-lcp
+      title: LCP (catalog)
+      kind: timing
+      unit: ms
+      higherIsWorse: true
+      aggregate: p75
+      window: ci
+      source:
+        type: lighthouse
+        query: largest-contentful-paint
+
+    - id: catalog-cls
+      title: CLS (catalog)
+      kind: gauge
+      unit: "1"
+      higherIsWorse: true
+      aggregate: p75
+      window: ci
+      source:
+        type: lighthouse
+        query: cumulative-layout-shift

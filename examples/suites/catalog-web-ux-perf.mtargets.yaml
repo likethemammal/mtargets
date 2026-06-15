@@ -1,0 +1,347 @@
+# Generated — imports catalog and defines an objective per indicator
+apiVersion: mtargets/v1
+kind: MetricSuite
+metadata:
+  id: catalog-web-ux-perf
+  title: Web & UX performance (1–40)
+  version: 1.0.0
+  tags:
+    - web
+    - ux
+    - lighthouse
+    - rum
+spec:
+  intent: Full examples for Core Web Vitals, lab diagnostics, resource budgets,
+    navigation timing, jank, animation, and memory.
+  imports:
+    - catalog: ../catalogs/catalog-web-ux-perf.mtargets.yaml
+  indicators: []
+  defaults:
+    missing:
+      behavior: fail
+  policy:
+    failOn:
+      - fail
+      - error
+    warnIsFailure: false
+  objectives:
+    - id: lcp-obj
+      title: Largest Contentful Paint
+      indicator: lcp
+      op: lte
+      value: 2500
+      severity: error
+      labels:
+        catalog: full
+    - id: inp-obj
+      title: Interaction to Next Paint
+      indicator: inp
+      op: lte
+      value: 200
+      severity: error
+      labels:
+        catalog: full
+    - id: cls-obj
+      title: Cumulative Layout Shift
+      indicator: cls
+      op: lte
+      value: 0.1
+      severity: error
+      labels:
+        catalog: full
+    - id: fcp-obj
+      title: First Contentful Paint
+      indicator: fcp
+      op: lte
+      value: 1800
+      severity: warn
+      labels:
+        catalog: full
+    - id: ttfb-obj
+      title: Time to First Byte
+      indicator: ttfb
+      op: lte
+      value: 800
+      severity: warn
+      labels:
+        catalog: full
+    - id: tbt-obj
+      title: Total Blocking Time
+      indicator: tbt
+      op: lte
+      value: 200
+      severity: warn
+      labels:
+        catalog: full
+    - id: speed-index-obj
+      title: Speed Index
+      indicator: speed-index
+      op: lte
+      value: 3400
+      severity: warn
+      labels:
+        catalog: full
+    - id: tti-obj
+      title: Time to Interactive
+      indicator: tti
+      op: lte
+      value: 3800
+      severity: warn
+      labels:
+        catalog: full
+    - id: dcl-obj
+      title: DOM Content Loaded
+      indicator: dcl
+      op: lte
+      value: 1500
+      severity: warn
+      labels:
+        catalog: full
+    - id: load-complete-obj
+      title: Window load event
+      indicator: load-complete
+      op: lte
+      value: 4000
+      severity: warn
+      labels:
+        catalog: full
+    - id: fid-obj
+      title: First Input Delay (legacy)
+      indicator: fid
+      op: lte
+      value: 100
+      severity: info
+      labels:
+        catalog: full
+    - id: max-potential-fid-obj
+      title: Max Potential FID
+      indicator: max-potential-fid
+      op: lte
+      value: 130
+      severity: warn
+      labels:
+        catalog: full
+    - id: time-to-hero-obj
+      title: Time to hero element
+      indicator: time-to-hero
+      op: lte
+      value: 2500
+      severity: error
+      labels:
+        catalog: full
+    - id: soft-nav-lcp-obj
+      title: Soft navigation LCP
+      indicator: soft-nav-lcp
+      op: lte
+      value: 2000
+      severity: warn
+      labels:
+        catalog: full
+    - id: transfer-total-obj
+      title: Total transfer size
+      indicator: transfer-total
+      op: lte
+      value: 700
+      severity: warn
+      labels:
+        catalog: full
+    - id: js-bytes-obj
+      title: JavaScript transfer size
+      indicator: js-bytes
+      op: lte
+      value: 170
+      severity: error
+      labels:
+        catalog: full
+    - id: css-bytes-obj
+      title: CSS transfer size
+      indicator: css-bytes
+      op: lte
+      value: 60
+      severity: warn
+      labels:
+        catalog: full
+    - id: image-bytes-obj
+      title: Image transfer size
+      indicator: image-bytes
+      op: lte
+      value: 400
+      severity: warn
+      labels:
+        catalog: full
+    - id: font-bytes-obj
+      title: Font transfer size
+      indicator: font-bytes
+      op: lte
+      value: 100
+      severity: warn
+      labels:
+        catalog: full
+    - id: third-party-count-obj
+      title: Third-party request count
+      indicator: third-party-count
+      op: lte
+      value: 10
+      severity: warn
+      labels:
+        catalog: full
+    - id: request-count-obj
+      title: Total request count
+      indicator: request-count
+      op: lte
+      value: 60
+      severity: warn
+      labels:
+        catalog: full
+    - id: critical-chain-depth-obj
+      title: Critical request chain depth
+      indicator: critical-chain-depth
+      op: lte
+      value: 3
+      severity: warn
+      labels:
+        catalog: full
+    - id: render-blocking-count-obj
+      title: Render-blocking resources
+      indicator: render-blocking-count
+      op: lte
+      value: 4
+      severity: warn
+      labels:
+        catalog: full
+    - id: unused-js-obj
+      title: Unused JavaScript bytes
+      indicator: unused-js
+      op: lte
+      value: 100
+      severity: warn
+      labels:
+        catalog: full
+    - id: unused-css-obj
+      title: Unused CSS bytes
+      indicator: unused-css
+      op: lte
+      value: 40
+      severity: warn
+      labels:
+        catalog: full
+    - id: browser-cache-hit-ratio-obj
+      title: Browser cache hit ratio
+      indicator: browser-cache-hit-ratio
+      op: gte
+      value: 0.7
+      severity: warn
+      labels:
+        catalog: full
+    - id: cdn-edge-latency-obj
+      title: CDN edge latency
+      indicator: cdn-edge-latency
+      op: lt
+      value: 100
+      severity: warn
+      labels:
+        catalog: full
+    - id: dns-time-obj
+      title: DNS lookup time
+      indicator: dns-time
+      op: lte
+      value: 50
+      severity: warn
+      labels:
+        catalog: full
+    - id: tcp-tls-time-obj
+      title: TCP+TLS connect time
+      indicator: tcp-tls-time
+      op: lte
+      value: 150
+      severity: warn
+      labels:
+        catalog: full
+    - id: redirect-time-obj
+      title: Redirect time
+      indicator: redirect-time
+      op: lte
+      value: 100
+      severity: warn
+      labels:
+        catalog: full
+    - id: long-task-count-obj
+      title: Long tasks (>50ms) count
+      indicator: long-task-count
+      op: lte
+      value: 10
+      severity: warn
+      labels:
+        catalog: full
+    - id: long-task-blocking-obj
+      title: Long task blocking sum
+      indicator: long-task-blocking
+      op: lte
+      value: 200
+      severity: warn
+      labels:
+        catalog: full
+    - id: animation-fps-obj
+      title: Animation FPS
+      indicator: animation-fps
+      op: gte
+      value: 50
+      severity: error
+      labels:
+        catalog: full
+    - id: long-frames-obj
+      title: Frames over 16.7ms
+      indicator: long-frames
+      op: lte
+      value: 5
+      severity: warn
+      labels:
+        catalog: full
+    - id: js-heap-obj
+      title: JS heap used
+      indicator: js-heap
+      op: lte
+      value: 80
+      severity: warn
+      labels:
+        catalog: full
+    - id: dom-nodes-obj
+      title: DOM node count
+      indicator: dom-nodes
+      op: lte
+      value: 1500
+      severity: warn
+      labels:
+        catalog: full
+    - id: layout-thrash-obj
+      title: Layout thrashing count
+      indicator: layout-thrash
+      op: lte
+      value: 5
+      severity: warn
+      labels:
+        catalog: full
+    - id: scroll-latency-obj
+      title: Scroll interaction latency
+      indicator: scroll-latency
+      op: lte
+      value: 20
+      severity: warn
+      labels:
+        catalog: full
+    - id: hydration-ms-obj
+      title: SSR hydration duration
+      indicator: hydration-ms
+      op: lte
+      value: 300
+      severity: warn
+      labels:
+        catalog: full
+    - id: lh-perf-score-obj
+      title: Lighthouse performance score
+      indicator: lh-perf-score
+      op: gte
+      value: 0.9
+      severity: error
+      labels:
+        catalog: full

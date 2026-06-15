@@ -1,0 +1,27 @@
+{
+  "catalogId": "catalog-logging-telemetry",
+  "title": "Logging & telemetry health (76–90)",
+  "tags": ["logging", "otel", "cardinality", "traces"],
+  "intent": "Log volume, severity rates, ingest lag, cardinality, correlation, and dropped telemetry.",
+  "subjects": [
+    { "id": "telemetry", "type": "system", "title": "Telemetry pipeline", "selectors": { "environment": "production" } }
+  ],
+  "defaultSubjectRef": "telemetry",
+  "indicators": [
+    { "id": "log-volume-eps", "title": "Log volume (events/s)", "kind": "gauge", "unit": "count", "aggregate": "rate", "window": { "type": "rolling", "duration": "5m" }, "source": { "type": "promql", "query": "sum(rate(log_events_total[5m]))" }, "demo": 800, "op": "lte", "value": 5000, "severity": "warn" },
+    { "id": "error-log-rate", "title": "Error-severity log rate", "kind": "gauge", "unit": "count", "aggregate": "rate", "source": { "type": "logql", "query": "{severity=~\"error|fatal\"}" }, "demo": 2, "op": "lte", "value": 50, "severity": "warn" },
+    { "id": "warn-log-rate", "title": "Warn log rate", "kind": "gauge", "unit": "count", "aggregate": "rate", "source": { "type": "logql", "query": "{severity=\"warn\"}" }, "demo": 20, "op": "lte", "value": 200, "severity": "info" },
+    { "id": "log-ingest-lag", "title": "Log ingest lag", "kind": "timing", "unit": "s", "aggregate": "p95", "source": { "type": "custom", "query": "logs.ingest_lag_seconds" }, "demo": 3, "op": "lte", "value": 30, "severity": "warn" },
+    { "id": "metric-cardinality", "title": "Active metric series cardinality", "kind": "gauge", "unit": "count", "aggregate": "last", "source": { "type": "custom", "query": "metrics.active_series" }, "demo": 120000, "op": "lte", "value": 500000, "severity": "warn" },
+    { "id": "pii-in-logs", "title": "PII detections in logs", "kind": "count", "unit": "count", "aggregate": "sum", "window": { "type": "rolling", "duration": "24h" }, "source": { "type": "custom", "query": "logs.pii_detection_count" }, "demo": 0, "op": "eq", "value": 0 },
+    { "id": "log-parse-failure-rate", "title": "Log parse failure rate", "kind": "ratio", "unit": "1", "aggregate": "rate", "source": { "type": "custom", "query": "logs.parse_failure_ratio", "bad": { "parse": "fail" }, "total": { "ingest": true } }, "demo": 0.001, "op": "lt", "value": 0.01, "severity": "warn" },
+    { "id": "span-error-rate", "title": "Trace span error rate", "kind": "ratio", "unit": "1", "aggregate": "rate", "source": { "type": "traceql", "query": "{ status=error }" }, "demo": 0.005, "op": "lt", "value": 0.02 },
+    { "id": "trace-sample-rate", "title": "Observed trace sample rate", "kind": "gauge", "unit": "1", "higherIsWorse": false, "aggregate": "avg", "source": { "type": "custom", "query": "traces.effective_sample_rate" }, "demo": 0.1, "op": "gte", "value": 0.01, "severity": "info" },
+    { "id": "span-duration-p95", "title": "Span duration p95", "kind": "timing", "unit": "ms", "aggregate": "p95", "source": { "type": "promql", "query": "histogram_quantile(0.95, sum(rate(traces_spanmetrics_latency_bucket[5m])) by (le))" }, "demo": 200, "op": "lt", "value": 500, "severity": "warn" },
+    { "id": "logs-derived-errors", "title": "Logs-to-metrics error count", "kind": "count", "unit": "count", "aggregate": "sum", "window": { "type": "rolling", "duration": "5m" }, "source": { "type": "promql", "query": "sum(increase(log_based_http_server_error_count[5m]))" }, "demo": 3, "op": "lte", "value": 50, "severity": "warn" },
+    { "id": "mttr-hours", "title": "MTTR (hours)", "kind": "timing", "unit": "s", "aggregate": "avg", "window": { "type": "calendar", "calendar": "month" }, "source": { "type": "sql", "query": "SELECT AVG(EXTRACT(EPOCH FROM restored_at - opened_at)) FROM incidents WHERE severity >= 2" }, "demo": 3600, "op": "lte", "value": 14400, "severity": "warn" },
+    { "id": "log-retention-coverage", "title": "Log retention coverage", "kind": "ratio", "unit": "1", "higherIsWorse": false, "aggregate": "last", "source": { "type": "custom", "query": "logs.retention_coverage_ratio" }, "demo": 1, "op": "gte", "value": 0.95, "severity": "warn" },
+    { "id": "trace-id-present", "title": "Logs with trace_id present", "kind": "ratio", "unit": "1", "higherIsWorse": false, "aggregate": "rate", "source": { "type": "logql", "query": "{service=~\".+\"} | json | trace_id != \"\"" }, "demo": 0.92, "op": "gte", "value": 0.8, "severity": "warn" },
+    { "id": "dropped-telemetry-rate", "title": "Dropped telemetry rate", "kind": "ratio", "unit": "1", "aggregate": "rate", "source": { "type": "promql", "query": "sum(rate(otelcol_processor_dropped_spans[5m])) / sum(rate(otelcol_receiver_accepted_spans[5m]))" }, "demo": 0.001, "op": "lt", "value": 0.01, "severity": "warn" }
+  ]
+}

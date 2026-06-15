@@ -1,0 +1,106 @@
+# Generated — imports catalog and defines an objective per indicator
+apiVersion: mtargets/v1
+kind: MetricSuite
+metadata:
+  id: catalog-ux-behavior
+  title: UX behavior & product (91–100)
+  version: 1.0.0
+  tags:
+    - ux
+    - rum
+    - frustration
+    - funnel
+spec:
+  intent: Frustration signals, engagement, and funnel metrics as full mtargets indicators.
+  imports:
+    - catalog: ../catalogs/catalog-ux-behavior.mtargets.yaml
+  indicators: []
+  defaults:
+    missing:
+      behavior: fail
+  policy:
+    failOn:
+      - fail
+      - error
+    warnIsFailure: false
+  objectives:
+    - id: rage-clicks-obj
+      title: Rage clicks per session
+      indicator: rage-clicks
+      op: lte
+      value: 1
+      severity: warn
+      labels:
+        catalog: full
+    - id: dead-clicks-obj
+      title: Dead clicks per session
+      indicator: dead-clicks
+      op: lte
+      value: 1
+      severity: warn
+      labels:
+        catalog: full
+    - id: error-clicks-obj
+      title: Error clicks per session
+      indicator: error-clicks
+      op: lte
+      value: 0.2
+      severity: error
+      labels:
+        catalog: full
+    - id: thrashed-cursor-obj
+      title: Thrashed cursor events per session
+      indicator: thrashed-cursor
+      op: lte
+      value: 1
+      severity: info
+      labels:
+        catalog: full
+    - id: scroll-depth-obj
+      title: Median scroll depth
+      indicator: scroll-depth
+      op: gte
+      value: 0.4
+      severity: info
+      labels:
+        catalog: full
+    - id: bounce-rate-obj
+      title: Bounce rate
+      indicator: bounce-rate
+      op: lt
+      value: 0.55
+      severity: warn
+      labels:
+        catalog: full
+    - id: session-duration-obj
+      title: Session duration
+      indicator: session-duration
+      op: gte
+      value: 60
+      severity: info
+      labels:
+        catalog: full
+    - id: task-success-rate-obj
+      title: Task success rate
+      indicator: task-success-rate
+      op: gte
+      value: 0.7
+      severity: error
+      labels:
+        catalog: full
+    - id: form-abandonment-obj
+      title: Form abandonment rate
+      indicator: form-abandonment
+      op: lt
+      value: 0.4
+      severity: warn
+      labels:
+        catalog: full
+    - id: conversion-rate-obj
+      title: Checkout conversion rate
+      indicator: conversion-rate
+      op: gte
+      value: 0.35
+      severity: warn
+      labels:
+        catalog: full

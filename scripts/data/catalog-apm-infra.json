@@ -1,0 +1,33 @@
+{
+  "catalogId": "catalog-apm-infra",
+  "title": "APM & infrastructure (41–60)",
+  "tags": ["apm", "red", "use", "infra"],
+  "intent": "RED/USE/golden-signal style service and resource metrics with full indicator definitions.",
+  "subjects": [
+    { "id": "api", "type": "service", "title": "Primary API", "selectors": { "service": "api", "route": "ALL" } },
+    { "id": "host", "type": "system", "title": "Host / node", "selectors": { "environment": "production" } }
+  ],
+  "indicators": [
+    { "id": "request-rate", "title": "Request rate (RPS)", "kind": "gauge", "unit": "count", "higherIsWorse": false, "subjectRef": "api", "aggregate": "rate", "window": { "type": "rolling", "duration": "5m" }, "source": { "type": "promql", "query": "sum(rate(http_requests_total[5m]))" }, "demo": 120, "op": "gte", "value": 1, "severity": "info" },
+    { "id": "http-5xx-rate", "title": "HTTP 5xx error rate", "kind": "ratio", "unit": "1", "subjectRef": "api", "aggregate": "rate", "window": { "type": "rolling", "duration": "5m" }, "source": { "type": "events", "bad": { "statusClass": "5xx" }, "total": { "all": true } }, "demo": 0.002, "op": "lt", "value": 0.01 },
+    { "id": "latency-p50", "title": "Latency p50", "kind": "timing", "unit": "ms", "subjectRef": "api", "aggregate": "p50", "source": { "type": "promql", "query": "histogram_quantile(0.50, sum(rate(http_request_duration_seconds_bucket[5m])) by (le))" }, "demo": 40, "op": "lt", "value": 100, "severity": "warn" },
+    { "id": "latency-p95", "title": "Latency p95", "kind": "timing", "unit": "ms", "subjectRef": "api", "aggregate": "p95", "source": { "type": "promql", "query": "histogram_quantile(0.95, sum(rate(http_request_duration_seconds_bucket[5m])) by (le))" }, "demo": 180, "op": "lt", "value": 300, "target": 0.99 },
+    { "id": "latency-p99", "title": "Latency p99", "kind": "timing", "unit": "ms", "subjectRef": "api", "aggregate": "p99", "source": { "type": "promql", "query": "histogram_quantile(0.99, sum(rate(http_request_duration_seconds_bucket[5m])) by (le))" }, "demo": 350, "op": "lt", "value": 500, "severity": "warn" },
+    { "id": "apdex", "title": "Apdex score", "kind": "score", "unit": "score", "higherIsWorse": false, "subjectRef": "api", "aggregate": "avg", "source": { "type": "custom", "query": "apm.apdex", "params": { "satisfiedMs": 100, "toleratingMs": 400 } }, "demo": 0.94, "op": "gte", "value": 0.9 },
+    { "id": "availability", "title": "Availability", "kind": "ratio", "unit": "1", "higherIsWorse": false, "subjectRef": "api", "aggregate": "rate", "window": { "type": "rolling", "duration": "30d" }, "source": { "type": "http", "query": { "method": "GET", "path": "/health" }, "params": { "up": true } }, "demo": 0.999, "op": "gte", "value": 0.995 },
+    { "id": "saturation-queue", "title": "Request queue depth (saturation)", "kind": "gauge", "unit": "count", "subjectRef": "api", "aggregate": "last", "source": { "type": "promql", "query": "http_server_queue_depth" }, "demo": 4, "op": "lte", "value": 50, "severity": "warn" },
+    { "id": "cpu-util", "title": "CPU utilization", "kind": "gauge", "unit": "1", "subjectRef": "host", "aggregate": "avg", "source": { "type": "promql", "query": "1 - avg(rate(node_cpu_seconds_total{mode=\"idle\"}[5m]))" }, "demo": 0.45, "op": "lte", "value": 0.85, "severity": "warn" },
+    { "id": "mem-util", "title": "Memory utilization", "kind": "gauge", "unit": "1", "subjectRef": "host", "aggregate": "avg", "source": { "type": "promql", "query": "1 - (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes)" }, "demo": 0.55, "op": "lte", "value": 0.9, "severity": "warn" },
+    { "id": "disk-util", "title": "Disk I/O utilization", "kind": "gauge", "unit": "1", "subjectRef": "host", "aggregate": "avg", "source": { "type": "promql", "query": "rate(node_disk_io_time_seconds_total[5m])" }, "demo": 0.2, "op": "lte", "value": 0.8, "severity": "warn" },
+    { "id": "disk-saturation", "title": "Disk queue saturation", "kind": "gauge", "unit": "count", "subjectRef": "host", "aggregate": "avg", "source": { "type": "promql", "query": "node_disk_io_now" }, "demo": 1, "op": "lte", "value": 8, "severity": "warn" },
+    { "id": "nic-util", "title": "Network bandwidth utilization", "kind": "gauge", "unit": "1", "subjectRef": "host", "aggregate": "avg", "source": { "type": "custom", "query": "host.nic_utilization" }, "demo": 0.15, "op": "lte", "value": 0.8, "severity": "warn" },
+    { "id": "nic-errors", "title": "Network interface errors", "kind": "count", "unit": "count", "subjectRef": "host", "aggregate": "sum", "window": { "type": "rolling", "duration": "1h" }, "source": { "type": "promql", "query": "sum(rate(node_network_receive_errs_total[5m]))" }, "demo": 0, "op": "lte", "value": 10, "severity": "warn" },
+    { "id": "db-query-p95", "title": "DB query latency p95", "kind": "timing", "unit": "ms", "subjectRef": "api", "aggregate": "p95", "source": { "type": "promql", "query": "histogram_quantile(0.95, sum(rate(db_query_duration_seconds_bucket[5m])) by (le))" }, "demo": 25, "op": "lt", "value": 100 },
+    { "id": "db-pool-sat", "title": "DB pool saturation", "kind": "gauge", "unit": "1", "subjectRef": "api", "aggregate": "last", "source": { "type": "custom", "query": "db.pool_wait_ratio" }, "demo": 0.1, "op": "lte", "value": 0.5, "severity": "warn" },
+    { "id": "server-cache-hit", "title": "Server cache hit ratio", "kind": "ratio", "unit": "1", "higherIsWorse": false, "subjectRef": "api", "aggregate": "rate", "source": { "type": "custom", "query": "cache.server_hit_ratio", "good": { "hit": true }, "total": { "lookup": true } }, "demo": 0.9, "op": "gte", "value": 0.8, "severity": "warn" },
+    { "id": "gc-pause", "title": "GC pause time", "kind": "timing", "unit": "ms", "subjectRef": "api", "aggregate": "p95", "source": { "type": "promql", "query": "go_gc_duration_seconds" }, "demo": 5, "op": "lte", "value": 50, "severity": "warn" },
+    { "id": "threadpool-queue", "title": "Thread pool queue depth", "kind": "gauge", "unit": "count", "subjectRef": "api", "aggregate": "last", "source": { "type": "custom", "query": "runtime.threadpool_queue" }, "demo": 2, "op": "lte", "value": 100, "severity": "warn" },
+    { "id": "consumer-lag", "title": "Message consumer lag", "kind": "gauge", "unit": "count", "subjectRef": "api", "aggregate": "last", "source": { "type": "promql", "query": "kafka_consumergroup_lag" }, "demo": 50, "op": "lte", "value": 1000, "severity": "warn" },
+    { "id": "cold-start", "title": "Serverless cold start", "kind": "timing", "unit": "ms", "subjectRef": "api", "aggregate": "p95", "window": "ci", "source": { "type": "custom", "query": "lambda.cold_start_ms" }, "demo": 400, "op": "lte", "value": 1000, "severity": "warn" }
+  ]
+}

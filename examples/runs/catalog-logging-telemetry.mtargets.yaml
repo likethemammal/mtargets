@@ -1,0 +1,140 @@
+apiVersion: mtargets/v1
+kind: MetricRun
+metadata:
+  id: run-catalog-logging-telemetry
+  title: Logging & telemetry health (76–90) run
+  labels:
+    runner: evaluate-catalogs
+  suiteId: catalog-logging-telemetry
+  suiteVersion: 1.0.0
+spec:
+  startedAt: 2026-07-10T16:11:10.100Z
+  finishedAt: 2026-07-10T16:11:10.100Z
+  status: pass
+  results:
+    - objectiveId: log-volume-eps-obj
+      indicatorId: log-volume-eps
+      status: pass
+      observed: 800
+      unit: count
+      threshold:
+        op: lte
+        value: 5000
+    - objectiveId: error-log-rate-obj
+      indicatorId: error-log-rate
+      status: pass
+      observed: 2
+      unit: count
+      threshold:
+        op: lte
+        value: 50
+    - objectiveId: warn-log-rate-obj
+      indicatorId: warn-log-rate
+      status: pass
+      observed: 20
+      unit: count
+      threshold:
+        op: lte
+        value: 200
+    - objectiveId: log-ingest-lag-obj
+      indicatorId: log-ingest-lag
+      status: pass
+      observed: 3
+      unit: s
+      threshold:
+        op: lte
+        value: 30
+    - objectiveId: metric-cardinality-obj
+      indicatorId: metric-cardinality
+      status: pass
+      observed: 120000
+      unit: count
+      threshold:
+        op: lte
+        value: 500000
+    - objectiveId: pii-in-logs-obj
+      indicatorId: pii-in-logs
+      status: pass
+      observed: 0
+      unit: count
+      threshold:
+        op: eq
+        value: 0
+    - objectiveId: log-parse-failure-rate-obj
+      indicatorId: log-parse-failure-rate
+      status: pass
+      observed: 0.001
+      unit: "1"
+      threshold:
+        op: lt
+        value: 0.01
+    - objectiveId: span-error-rate-obj
+      indicatorId: span-error-rate
+      status: pass
+      observed: 0.005
+      unit: "1"
+      threshold:
+        op: lt
+        value: 0.02
+    - objectiveId: trace-sample-rate-obj
+      indicatorId: trace-sample-rate
+      status: pass
+      observed: 0.1
+      unit: "1"
+      threshold:
+        op: gte
+        value: 0.01
+    - objectiveId: span-duration-p95-obj
+      indicatorId: span-duration-p95
+      status: pass
+      observed: 200
+      unit: ms
+      threshold:
+        op: lt
+        value: 500
+    - objectiveId: logs-derived-errors-obj
+      indicatorId: logs-derived-errors
+      status: pass
+      observed: 3
+      unit: count
+      threshold:
+        op: lte
+        value: 50
+    - objectiveId: mttr-hours-obj
+      indicatorId: mttr-hours
+      status: pass
+      observed: 3600
+      unit: s
+      threshold:
+        op: lte
+        value: 14400
+    - objectiveId: log-retention-coverage-obj
+      indicatorId: log-retention-coverage
+      status: pass
+      observed: 1
+      unit: "1"
+      threshold:
+        op: gte
+        value: 0.95
+    - objectiveId: trace-id-present-obj
+      indicatorId: trace-id-present
+      status: pass
+      observed: 0.92
+      unit: "1"
+      threshold:
+        op: gte
+        value: 0.8
+    - objectiveId: dropped-telemetry-rate-obj
+      indicatorId: dropped-telemetry-rate
+      status: pass
+      observed: 0.001
+      unit: "1"
+      threshold:
+        op: lt
+        value: 0.01
+  summary:
+    passed: 15
+    warned: 0
+    failed: 0
+    errored: 0
+    skipped: 0

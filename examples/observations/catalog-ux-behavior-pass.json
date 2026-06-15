@@ -1,0 +1,52 @@
+[
+  {
+    "indicatorId": "rage-clicks",
+    "observed": 0.2,
+    "unit": "count"
+  },
+  {
+    "indicatorId": "dead-clicks",
+    "observed": 0.3,
+    "unit": "count"
+  },
+  {
+    "indicatorId": "error-clicks",
+    "observed": 0.05,
+    "unit": "count"
+  },
+  {
+    "indicatorId": "thrashed-cursor",
+    "observed": 0.1,
+    "unit": "count"
+  },
+  {
+    "indicatorId": "scroll-depth",
+    "observed": 0.65,
+    "unit": "1"
+  },
+  {
+    "indicatorId": "bounce-rate",
+    "observed": 0.35,
+    "unit": "1"
+  },
+  {
+    "indicatorId": "session-duration",
+    "observed": 180,
+    "unit": "s"
+  },
+  {
+    "indicatorId": "task-success-rate",
+    "observed": 0.82,
+    "unit": "1"
+  },
+  {
+    "indicatorId": "form-abandonment",
+    "observed": 0.25,
+    "unit": "1"
+  },
+  {
+    "indicatorId": "conversion-rate",
+    "observed": 0.42,
+    "unit": "1"
+  }
+]

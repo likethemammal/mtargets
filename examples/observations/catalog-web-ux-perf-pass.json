@@ -1,0 +1,202 @@
+[
+  {
+    "indicatorId": "lcp",
+    "observed": 2200,
+    "unit": "ms"
+  },
+  {
+    "indicatorId": "inp",
+    "observed": 160,
+    "unit": "ms"
+  },
+  {
+    "indicatorId": "cls",
+    "observed": 0.05,
+    "unit": "1"
+  },
+  {
+    "indicatorId": "fcp",
+    "observed": 1400,
+    "unit": "ms"
+  },
+  {
+    "indicatorId": "ttfb",
+    "observed": 500,
+    "unit": "ms"
+  },
+  {
+    "indicatorId": "tbt",
+    "observed": 150,
+    "unit": "ms"
+  },
+  {
+    "indicatorId": "speed-index",
+    "observed": 2800,
+    "unit": "ms"
+  },
+  {
+    "indicatorId": "tti",
+    "observed": 3200,
+    "unit": "ms"
+  },
+  {
+    "indicatorId": "dcl",
+    "observed": 900,
+    "unit": "ms"
+  },
+  {
+    "indicatorId": "load-complete",
+    "observed": 2500,
+    "unit": "ms"
+  },
+  {
+    "indicatorId": "fid",
+    "observed": 40,
+    "unit": "ms"
+  },
+  {
+    "indicatorId": "max-potential-fid",
+    "observed": 80,
+    "unit": "ms"
+  },
+  {
+    "indicatorId": "time-to-hero",
+    "observed": 1800,
+    "unit": "ms"
+  },
+  {
+    "indicatorId": "soft-nav-lcp",
+    "observed": 900,
+    "unit": "ms"
+  },
+  {
+    "indicatorId": "transfer-total",
+    "observed": 600,
+    "unit": "KiB"
+  },
+  {
+    "indicatorId": "js-bytes",
+    "observed": 150,
+    "unit": "KiB"
+  },
+  {
+    "indicatorId": "css-bytes",
+    "observed": 40,
+    "unit": "KiB"
+  },
+  {
+    "indicatorId": "image-bytes",
+    "observed": 200,
+    "unit": "KiB"
+  },
+  {
+    "indicatorId": "font-bytes",
+    "observed": 60,
+    "unit": "KiB"
+  },
+  {
+    "indicatorId": "third-party-count",
+    "observed": 6,
+    "unit": "count"
+  },
+  {
+    "indicatorId": "request-count",
+    "observed": 40,
+    "unit": "count"
+  },
+  {
+    "indicatorId": "critical-chain-depth",
+    "observed": 2,
+    "unit": "count"
+  },
+  {
+    "indicatorId": "render-blocking-count",
+    "observed": 2,
+    "unit": "count"
+  },
+  {
+    "indicatorId": "unused-js",
+    "observed": 40,
+    "unit": "KiB"
+  },
+  {
+    "indicatorId": "unused-css",
+    "observed": 15,
+    "unit": "KiB"
+  },
+  {
+    "indicatorId": "browser-cache-hit-ratio",
+    "observed": 0.85,
+    "unit": "1"
+  },
+  {
+    "indicatorId": "cdn-edge-latency",
+    "observed": 40,
+    "unit": "ms"
+  },
+  {
+    "indicatorId": "dns-time",
+    "observed": 20,
+    "unit": "ms"
+  },
+  {
+    "indicatorId": "tcp-tls-time",
+    "observed": 60,
+    "unit": "ms"
+  },
+  {
+    "indicatorId": "redirect-time",
+    "observed": 0,
+    "unit": "ms"
+  },
+  {
+    "indicatorId": "long-task-count",
+    "observed": 3,
+    "unit": "count"
+  },
+  {
+    "indicatorId": "long-task-blocking",
+    "observed": 120,
+    "unit": "ms"
+  },
+  {
+    "indicatorId": "animation-fps",
+    "observed": 58,
+    "unit": "1"
+  },
+  {
+    "indicatorId": "long-frames",
+    "observed": 2,
+    "unit": "count"
+  },
+  {
+    "indicatorId": "js-heap",
+    "observed": 42,
+    "unit": "MiB"
+  },
+  {
+    "indicatorId": "dom-nodes",
+    "observed": 820,
+    "unit": "count"
+  },
+  {
+    "indicatorId": "layout-thrash",
+    "observed": 1,
+    "unit": "count"
+  },
+  {
+    "indicatorId": "scroll-latency",
+    "observed": 12,
+    "unit": "ms"
+  },
+  {
+    "indicatorId": "hydration-ms",
+    "observed": 180,
+    "unit": "ms"
+  },
+  {
+    "indicatorId": "lh-perf-score",
+    "observed": 0.92,
+    "unit": "score"
+  }
+]

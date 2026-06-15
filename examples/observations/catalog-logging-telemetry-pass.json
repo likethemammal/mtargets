@@ -1,0 +1,77 @@
+[
+  {
+    "indicatorId": "log-volume-eps",
+    "observed": 800,
+    "unit": "count"
+  },
+  {
+    "indicatorId": "error-log-rate",
+    "observed": 2,
+    "unit": "count"
+  },
+  {
+    "indicatorId": "warn-log-rate",
+    "observed": 20,
+    "unit": "count"
+  },
+  {
+    "indicatorId": "log-ingest-lag",
+    "observed": 3,
+    "unit": "s"
+  },
+  {
+    "indicatorId": "metric-cardinality",
+    "observed": 120000,
+    "unit": "count"
+  },
+  {
+    "indicatorId": "pii-in-logs",
+    "observed": 0,
+    "unit": "count"
+  },
+  {
+    "indicatorId": "log-parse-failure-rate",
+    "observed": 0.001,
+    "unit": "1"
+  },
+  {
+    "indicatorId": "span-error-rate",
+    "observed": 0.005,
+    "unit": "1"
+  },
+  {
+    "indicatorId": "trace-sample-rate",
+    "observed": 0.1,
+    "unit": "1"
+  },
+  {
+    "indicatorId": "span-duration-p95",
+    "observed": 200,
+    "unit": "ms"
+  },
+  {
+    "indicatorId": "logs-derived-errors",
+    "observed": 3,
+    "unit": "count"
+  },
+  {
+    "indicatorId": "mttr-hours",
+    "observed": 3600,
+    "unit": "s"
+  },
+  {
+    "indicatorId": "log-retention-coverage",
+    "observed": 1,
+    "unit": "1"
+  },
+  {
+    "indicatorId": "trace-id-present",
+    "observed": 0.92,
+    "unit": "1"
+  },
+  {
+    "indicatorId": "dropped-telemetry-rate",
+    "observed": 0.001,
+    "unit": "1"
+  }
+]

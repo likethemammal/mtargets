@@ -1,0 +1,27 @@
+{
+  "catalogId": "catalog-errors-reliability",
+  "title": "Errors & reliability (61–75)",
+  "tags": ["errors", "sentry", "reliability", "slo"],
+  "intent": "Error-tracker, crash-free, budget burn, timeouts, retries, and related reliability metrics.",
+  "subjects": [
+    { "id": "app", "type": "service", "title": "Application", "selectors": { "service": "app", "environment": "production" } }
+  ],
+  "defaultSubjectRef": "app",
+  "indicators": [
+    { "id": "unhandled-exception-rate", "title": "Unhandled exception rate", "kind": "ratio", "unit": "1", "aggregate": "rate", "window": { "type": "rolling", "duration": "24h" }, "source": { "type": "sentry", "query": "is:unresolved event.type:error", "params": { "metric": "error_rate" }, "credentialsRef": "sentry-api-token" }, "demo": 0.004, "op": "lt", "value": 0.01 },
+    { "id": "unresolved-issues", "title": "Unresolved issue count", "kind": "count", "unit": "count", "aggregate": "last", "source": { "type": "sentry", "query": "is:unresolved", "params": { "metric": "issue_count" }, "credentialsRef": "sentry-api-token" }, "demo": 12, "op": "lte", "value": 25, "severity": "warn" },
+    { "id": "crash-free-sessions", "title": "Crash-free sessions", "kind": "ratio", "unit": "1", "higherIsWorse": false, "aggregate": "rate", "window": { "type": "rolling", "duration": "7d" }, "source": { "type": "custom", "query": "mobile.crash_free_sessions" }, "demo": 0.998, "op": "gte", "value": 0.995 },
+    { "id": "crash-free-users", "title": "Crash-free users", "kind": "ratio", "unit": "1", "higherIsWorse": false, "aggregate": "rate", "window": { "type": "rolling", "duration": "7d" }, "source": { "type": "custom", "query": "mobile.crash_free_users" }, "demo": 0.997, "op": "gte", "value": 0.99, "severity": "warn" },
+    { "id": "error-budget-burn", "title": "Error budget burn rate (1h)", "kind": "gauge", "unit": "1", "aggregate": "last", "window": { "type": "rolling", "duration": "1h" }, "source": { "type": "custom", "query": "slo.burn_rate", "params": { "window": "1h" } }, "demo": 0.5, "op": "lt", "value": 2, "severity": "warn" },
+    { "id": "frontend-js-error-rate", "title": "Frontend JS error rate", "kind": "ratio", "unit": "1", "aggregate": "rate", "source": { "type": "glitchtip", "query": "event.type:error", "params": { "metric": "error_rate", "baseUrlEnv": "GLITCHTIP_URL" }, "credentialsRef": "glitchtip-token" }, "demo": 0.003, "op": "lt", "value": 0.01 },
+    { "id": "unhandled-rejection-rate", "title": "Unhandled promise rejection rate", "kind": "ratio", "unit": "1", "aggregate": "rate", "source": { "type": "events", "bad": { "type": "unhandledrejection" }, "total": { "pageview": true } }, "demo": 0.001, "op": "lt", "value": 0.005, "severity": "warn" },
+    { "id": "http-4xx-rate", "title": "HTTP 4xx rate", "kind": "ratio", "unit": "1", "aggregate": "rate", "source": { "type": "events", "bad": { "statusClass": "4xx" }, "total": { "all": true } }, "demo": 0.03, "op": "lt", "value": 0.1, "severity": "warn" },
+    { "id": "auth-failure-rate", "title": "Auth failure rate", "kind": "ratio", "unit": "1", "aggregate": "rate", "source": { "type": "logql", "query": "{service=\"auth\"} |= \"auth.failure\"", "params": { "as": "rate" } }, "demo": 0.02, "op": "lt", "value": 0.05, "severity": "warn" },
+    { "id": "timeout-rate", "title": "Request timeout rate", "kind": "ratio", "unit": "1", "aggregate": "rate", "source": { "type": "events", "bad": { "error": "timeout" }, "total": { "all": true } }, "demo": 0.001, "op": "lt", "value": 0.01 },
+    { "id": "circuit-open-count", "title": "Circuit breaker opens", "kind": "count", "unit": "count", "aggregate": "sum", "window": { "type": "rolling", "duration": "1h" }, "source": { "type": "custom", "query": "resilience.circuit_open_count" }, "demo": 0, "op": "lte", "value": 5, "severity": "warn" },
+    { "id": "retry-rate", "title": "Client retry rate", "kind": "ratio", "unit": "1", "aggregate": "rate", "source": { "type": "custom", "query": "client.retry_ratio" }, "demo": 0.02, "op": "lt", "value": 0.1, "severity": "warn" },
+    { "id": "dlq-depth", "title": "Dead letter queue depth", "kind": "gauge", "unit": "count", "aggregate": "last", "source": { "type": "promql", "query": "queue_dlq_messages" }, "demo": 0, "op": "lte", "value": 10, "severity": "warn" },
+    { "id": "fatal-count", "title": "Fatal / panic count", "kind": "count", "unit": "count", "aggregate": "sum", "window": { "type": "rolling", "duration": "24h" }, "source": { "type": "logql", "query": "{severity=\"fatal\"} or {severity=\"panic\"}" }, "demo": 0, "op": "eq", "value": 0 },
+    { "id": "new-unique-issues", "title": "New unique issues", "kind": "count", "unit": "count", "aggregate": "sum", "window": { "type": "calendar", "calendar": "day" }, "source": { "type": "sentry", "query": "is:unresolved firstSeen:-24h", "params": { "metric": "issue_count" } }, "demo": 1, "op": "lte", "value": 5, "severity": "warn" }
+  ]
+}

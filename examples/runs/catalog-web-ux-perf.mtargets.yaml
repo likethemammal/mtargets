@@ -1,0 +1,340 @@
+apiVersion: mtargets/v1
+kind: MetricRun
+metadata:
+  id: run-catalog-web-ux-perf
+  title: Web & UX performance (1–40) run
+  labels:
+    runner: evaluate-catalogs
+  suiteId: catalog-web-ux-perf
+  suiteVersion: 1.0.0
+spec:
+  startedAt: 2026-07-10T16:11:10.134Z
+  finishedAt: 2026-07-10T16:11:10.134Z
+  status: pass
+  results:
+    - objectiveId: lcp-obj
+      indicatorId: lcp
+      status: pass
+      observed: 2200
+      unit: ms
+      threshold:
+        op: lte
+        value: 2500
+    - objectiveId: inp-obj
+      indicatorId: inp
+      status: pass
+      observed: 160
+      unit: ms
+      threshold:
+        op: lte
+        value: 200
+    - objectiveId: cls-obj
+      indicatorId: cls
+      status: pass
+      observed: 0.05
+      unit: "1"
+      threshold:
+        op: lte
+        value: 0.1
+    - objectiveId: fcp-obj
+      indicatorId: fcp
+      status: pass
+      observed: 1400
+      unit: ms
+      threshold:
+        op: lte
+        value: 1800
+    - objectiveId: ttfb-obj
+      indicatorId: ttfb
+      status: pass
+      observed: 500
+      unit: ms
+      threshold:
+        op: lte
+        value: 800
+    - objectiveId: tbt-obj
+      indicatorId: tbt
+      status: pass
+      observed: 150
+      unit: ms
+      threshold:
+        op: lte
+        value: 200
+    - objectiveId: speed-index-obj
+      indicatorId: speed-index
+      status: pass
+      observed: 2800
+      unit: ms
+      threshold:
+        op: lte
+        value: 3400
+    - objectiveId: tti-obj
+      indicatorId: tti
+      status: pass
+      observed: 3200
+      unit: ms
+      threshold:
+        op: lte
+        value: 3800
+    - objectiveId: dcl-obj
+      indicatorId: dcl
+      status: pass
+      observed: 900
+      unit: ms
+      threshold:
+        op: lte
+        value: 1500
+    - objectiveId: load-complete-obj
+      indicatorId: load-complete
+      status: pass
+      observed: 2500
+      unit: ms
+      threshold:
+        op: lte
+        value: 4000
+    - objectiveId: fid-obj
+      indicatorId: fid
+      status: pass
+      observed: 40
+      unit: ms
+      threshold:
+        op: lte
+        value: 100
+    - objectiveId: max-potential-fid-obj
+      indicatorId: max-potential-fid
+      status: pass
+      observed: 80
+      unit: ms
+      threshold:
+        op: lte
+        value: 130
+    - objectiveId: time-to-hero-obj
+      indicatorId: time-to-hero
+      status: pass
+      observed: 1800
+      unit: ms
+      threshold:
+        op: lte
+        value: 2500
+    - objectiveId: soft-nav-lcp-obj
+      indicatorId: soft-nav-lcp
+      status: pass
+      observed: 900
+      unit: ms
+      threshold:
+        op: lte
+        value: 2000
+    - objectiveId: transfer-total-obj
+      indicatorId: transfer-total
+      status: pass
+      observed: 600
+      unit: KiB
+      threshold:
+        op: lte
+        value: 700
+    - objectiveId: js-bytes-obj
+      indicatorId: js-bytes
+      status: pass
+      observed: 150
+      unit: KiB
+      threshold:
+        op: lte
+        value: 170
+    - objectiveId: css-bytes-obj
+      indicatorId: css-bytes
+      status: pass
+      observed: 40
+      unit: KiB
+      threshold:
+        op: lte
+        value: 60
+    - objectiveId: image-bytes-obj
+      indicatorId: image-bytes
+      status: pass
+      observed: 200
+      unit: KiB
+      threshold:
+        op: lte
+        value: 400
+    - objectiveId: font-bytes-obj
+      indicatorId: font-bytes
+      status: pass
+      observed: 60
+      unit: KiB
+      threshold:
+        op: lte
+        value: 100
+    - objectiveId: third-party-count-obj
+      indicatorId: third-party-count
+      status: pass
+      observed: 6
+      unit: count
+      threshold:
+        op: lte
+        value: 10
+    - objectiveId: request-count-obj
+      indicatorId: request-count
+      status: pass
+      observed: 40
+      unit: count
+      threshold:
+        op: lte
+        value: 60
+    - objectiveId: critical-chain-depth-obj
+      indicatorId: critical-chain-depth
+      status: pass
+      observed: 2
+      unit: count
+      threshold:
+        op: lte
+        value: 3
+    - objectiveId: render-blocking-count-obj
+      indicatorId: render-blocking-count
+      status: pass
+      observed: 2
+      unit: count
+      threshold:
+        op: lte
+        value: 4
+    - objectiveId: unused-js-obj
+      indicatorId: unused-js
+      status: pass
+      observed: 40
+      unit: KiB
+      threshold:
+        op: lte
+        value: 100
+    - objectiveId: unused-css-obj
+      indicatorId: unused-css
+      status: pass
+      observed: 15
+      unit: KiB
+      threshold:
+        op: lte
+        value: 40
+    - objectiveId: browser-cache-hit-ratio-obj
+      indicatorId: browser-cache-hit-ratio
+      status: pass
+      observed: 0.85
+      unit: "1"
+      threshold:
+        op: gte
+        value: 0.7
+    - objectiveId: cdn-edge-latency-obj
+      indicatorId: cdn-edge-latency
+      status: pass
+      observed: 40
+      unit: ms
+      threshold:
+        op: lt
+        value: 100
+    - objectiveId: dns-time-obj
+      indicatorId: dns-time
+      status: pass
+      observed: 20
+      unit: ms
+      threshold:
+        op: lte
+        value: 50
+    - objectiveId: tcp-tls-time-obj
+      indicatorId: tcp-tls-time
+      status: pass
+      observed: 60
+      unit: ms
+      threshold:
+        op: lte
+        value: 150
+    - objectiveId: redirect-time-obj
+      indicatorId: redirect-time
+      status: pass
+      observed: 0
+      unit: ms
+      threshold:
+        op: lte
+        value: 100
+    - objectiveId: long-task-count-obj
+      indicatorId: long-task-count
+      status: pass
+      observed: 3
+      unit: count
+      threshold:
+        op: lte
+        value: 10
+    - objectiveId: long-task-blocking-obj
+      indicatorId: long-task-blocking
+      status: pass
+      observed: 120
+      unit: ms
+      threshold:
+        op: lte
+        value: 200
+    - objectiveId: animation-fps-obj
+      indicatorId: animation-fps
+      status: pass
+      observed: 58
+      unit: "1"
+      threshold:
+        op: gte
+        value: 50
+    - objectiveId: long-frames-obj
+      indicatorId: long-frames
+      status: pass
+      observed: 2
+      unit: count
+      threshold:
+        op: lte
+        value: 5
+    - objectiveId: js-heap-obj
+      indicatorId: js-heap
+      status: pass
+      observed: 42
+      unit: MiB
+      threshold:
+        op: lte
+        value: 80
+    - objectiveId: dom-nodes-obj
+      indicatorId: dom-nodes
+      status: pass
+      observed: 820
+      unit: count
+      threshold:
+        op: lte
+        value: 1500
+    - objectiveId: layout-thrash-obj
+      indicatorId: layout-thrash
+      status: pass
+      observed: 1
+      unit: count
+      threshold:
+        op: lte
+        value: 5
+    - objectiveId: scroll-latency-obj
+      indicatorId: scroll-latency
+      status: pass
+      observed: 12
+      unit: ms
+      threshold:
+        op: lte
+        value: 20
+    - objectiveId: hydration-ms-obj
+      indicatorId: hydration-ms
+      status: pass
+      observed: 180
+      unit: ms
+      threshold:
+        op: lte
+        value: 300
+    - objectiveId: lh-perf-score-obj
+      indicatorId: lh-perf-score
+      status: pass
+      observed: 0.92
+      unit: score
+      threshold:
+        op: gte
+        value: 0.9
+  summary:
+    passed: 40
+    warned: 0
+    failed: 0
+    errored: 0
+    skipped: 0
