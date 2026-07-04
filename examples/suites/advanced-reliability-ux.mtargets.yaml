@@ -1,0 +1,155 @@
+apiVersion: mtargets/v1
+kind: MetricSuite
+metadata:
+  id: advanced-reliability-ux
+  title: Advanced reliability + UX gates
+  version: 1.5.0
+  description: Demonstrates error budgets, ratio SLIs, alerts, stages, waivers, sampling, privacy, distribution
+spec:
+  intent: Ship only when availability budget and latency distribution hold
+  subjects:
+    - id: api
+      type: service
+      title: Checkout API
+    - id: checkout
+      type: surface
+      title: Checkout page
+  indicators:
+    - id: availability
+      kind: ratio
+      unit: "1"
+      higherIsWorse: false
+      subjectRef: api
+      source:
+        type: promql
+        good: sum(rate(http_requests_total{status!~"5.."}[5m]))
+        total: sum(rate(http_requests_total[5m]))
+      window: 30d
+      sampling:
+        minSampleSize: 100
+        requireDimensions: [region]
+        onInsufficient: warn
+    - id: latency
+      kind: histogram
+      unit: ms
+      higherIsWorse: true
+      subjectRef: api
+      source:
+        type: promql
+        query: http_request_duration_seconds_bucket
+      aggregate: p95
+      window: 1h
+    - id: lcp
+      kind: timing
+      unit: ms
+      higherIsWorse: true
+      subjectRef: checkout
+      source:
+        type: web-vitals
+        query: LCP
+      aggregate: p75
+  objectives:
+    - id: availability-slo
+      title: 99.9% availability
+      indicator: availability
+      op: gte
+      value: 0.999
+      severity: error
+      target: 0.999
+      errorBudget:
+        budgetingMethod: Occurrences
+        target: 0.999
+        window: 30d
+        burnRates:
+          - id: fast-burn
+            window: 1h
+            maxBurnRate: 14.4
+            severity: error
+          - id: slow-burn
+            window: 6h
+            maxBurnRate: 6
+            severity: warn
+      alertPolicyRefs: [page-on-burn]
+    - id: latency-distribution
+      title: p95 and p99 latency
+      indicator: latency
+      op: lte
+      value: 300
+      severity: error
+      distribution:
+        percentiles:
+          - { p: 95, op: lte, value: 300 }
+          - { p: 99, op: lte, value: 800 }
+    - id: lcp-good
+      indicator: lcp
+      op: lte
+      value: 2500
+      severity: warn
+  alertPolicies:
+    - id: page-on-burn
+      title: Page on fast burn
+      forObjectives: [availability-slo]
+      conditions:
+        - onStatus: [fail, error]
+          severity: error
+        - budgetRemainingBelow: 0.1
+          severity: warn
+      notify:
+        method: page
+        channelsRef: oncall-checkout
+  stages:
+    - id: staging
+      title: Staging
+      objectiveOverrides:
+        - objectiveId: availability-slo
+          value: 0.99
+          target: 0.99
+        - objectiveId: latency-distribution
+          value: 500
+    - id: prod
+      title: Production
+      inherits: staging
+      policy:
+        warnIsFailure: true
+        sampling:
+          minSampleSize: 100
+      objectiveOverrides:
+        - objectiveId: availability-slo
+          value: 0.999
+          target: 0.999
+        - objectiveId: lcp-good
+          severity: error
+  waivers:
+    - id: waiver-lcp-q3
+      objectiveIds: [lcp-good]
+      reason: Known CDN regression; fix shipping Friday
+      approvedBy: sre-lead@example.com
+      expiresAt: "2099-12-31T00:00:00Z"
+      statusOverride: warn
+      ticketRef: INC-1234
+  evidence:
+    - id: har-on-fail
+      type: har
+      capture: on_fail
+      forObjectives: [lcp-good]
+      privacy:
+        allowPii: false
+        classification: internal
+        retention: 7d
+        redact: [cookies, authorization, email]
+  policy:
+    failOn: [fail, error]
+    privacy:
+      allowPii: false
+      classification: internal
+      retention: 14d
+    sampling:
+      minSampleSize: 50
+      coldStart: exclude
+  composites:
+    - id: ship-gate
+      mode: all
+      severity: error
+      objectives:
+        - { ref: availability-slo, key: true }
+        - { ref: latency-distribution, key: true }
