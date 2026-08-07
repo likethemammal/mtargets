@@ -1,0 +1,52 @@
+---
+title: Metric Targets
+description: Metric Targets library and the mtargets file format for measurable quality targets.
+template: splash
+hero:
+  tagline: The Metric Targets library implements the mtargets format — measurable quality targets as a shared contract for UI, API, app, and CI.
+  actions:
+    - text: Product layers
+      link: /guides/product-layers/
+      icon: right-arrow
+    - text: Validate
+      link: /guides/validate/
+      variant: minimal
+    - text: Specification
+      link: /reference/spec/
+      icon: document
+      variant: minimal
+    - text: API reference
+      link: /api/
+      icon: seti:json
+      variant: minimal
+---
+
+## Naming
+
+| Name | Meaning |
+|------|---------|
+| **Metric Targets** | This library (TypeScript API + CLI) |
+| **mtargets** | npm package `mtargets`, CLI `mtargets`, and file format (`apiVersion: mtargets/v1`, `*.mtargets.yaml`) |
+
+```yaml
+apiVersion: mtargets/v1
+kind: MetricSuite
+metadata:
+  id: checkout-quality
+  title: Checkout quality
+spec:
+  subjects: [...]
+  indicators: [...]
+  objectives: [...]
+```
+
+Start with [Product layers](/guides/product-layers/) for how format, library, runners, and consumers fit together.
+
+## Next steps
+
+- [Product layers](/guides/product-layers/)
+- [Validate from CI](/guides/validate/)
+- [Consumers (UI / API / app)](/guides/consumers/)
+- [Integrations](/guides/integrations/)
+- [Normative spec](/reference/spec/)
+- [TypeScript API](/api/)
