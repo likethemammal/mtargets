@@ -1,0 +1,47 @@
+{
+  "$schema": "https://mtargets.dev/schema/v0.2.json",
+  "name": "product-v02-minimal",
+  "version": "0.2.0",
+  "description": "Minimal v0.2 product schema example",
+  "suites": {
+    "cwv": "Core Web Vitals"
+  },
+  "metrics": {
+    "lcp": {
+      "label": "Largest Contentful Paint",
+      "category": "cwv",
+      "unit": "ms",
+      "percentile": "p75",
+      "source": "rum",
+      "suite": "cwv",
+      "direction": "lower-is-better",
+      "tiers": {
+        "good": 2500,
+        "warn": 4000
+      },
+      "baseline": 1800,
+      "per_route": {
+        "/rating": {
+          "tiers": { "good": 2500, "warn": 4000 },
+          "baseline": 1200
+        },
+        "/curation/styles": {
+          "tiers": { "good": 2500, "warn": 4000 },
+          "baseline": 3900
+        }
+      }
+    },
+    "lighthouse-perf": {
+      "label": "Lighthouse Performance Score",
+      "category": "perf",
+      "unit": "score",
+      "percentile": "median",
+      "source": "synthetic",
+      "direction": "higher-is-better",
+      "tiers": {
+        "good": 90,
+        "warn": 75
+      }
+    }
+  }
+}

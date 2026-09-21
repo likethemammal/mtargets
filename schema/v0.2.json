@@ -1,0 +1,119 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mtargets.dev/schema/v0.2.json",
+  "title": "mtargets product schema v0.2",
+  "description": "Product-facing metric targets file (comfy-art style). Distinct from MetricSuite (apiVersion mtargets/v1). Backwards-compatible with v0.1 files that use targets.*.target / warning.",
+  "type": "object",
+  "required": ["name"],
+  "additionalProperties": false,
+  "properties": {
+    "$schema": { "type": "string" },
+    "name": { "type": "string", "minLength": 1 },
+    "version": { "type": "string" },
+    "description": { "type": "string" },
+    "source": {
+      "description": "Optional product/host identifier (not the per-metric measurement source enum).",
+      "type": "string"
+    },
+    "suites": {
+      "type": "object",
+      "additionalProperties": { "type": "string" }
+    },
+    "metrics": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": { "$ref": "#/$defs/metric" }
+    },
+    "targets": {
+      "description": "Legacy v0.1 alias for metrics. Prefer metrics in v0.2.",
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": { "$ref": "#/$defs/metric" }
+    }
+  },
+  "anyOf": [
+    { "required": ["metrics"] },
+    { "required": ["targets"] }
+  ],
+  "$defs": {
+    "tiers": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "good": { "type": "number" },
+        "warn": { "type": "number" }
+      }
+    },
+    "routeOverride": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "tiers": { "$ref": "#/$defs/tiers" },
+        "baseline": { "type": "number" },
+        "target": {
+          "description": "Legacy alias for tiers.good",
+          "type": "number"
+        },
+        "warning": {
+          "description": "Legacy alias for tiers.warn",
+          "type": "number"
+        },
+        "percentile": { "$ref": "#/$defs/percentile" },
+        "direction": { "$ref": "#/$defs/direction" }
+      }
+    },
+    "percentile": {
+      "type": "string",
+      "enum": ["p75", "p95", "p50", "median"]
+    },
+    "metricSource": {
+      "type": "string",
+      "enum": ["rum", "synthetic", "custom", "server"]
+    },
+    "category": {
+      "type": "string",
+      "enum": ["cwv", "perf", "generation", "ux", "error", "network"]
+    },
+    "direction": {
+      "type": "string",
+      "enum": ["lower-is-better", "higher-is-better"]
+    },
+    "metric": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "label": { "type": "string" },
+        "description": {
+          "description": "Legacy v0.1 alias for label",
+          "type": "string"
+        },
+        "category": { "$ref": "#/$defs/category" },
+        "unit": { "type": "string" },
+        "percentile": { "$ref": "#/$defs/percentile" },
+        "source": { "$ref": "#/$defs/metricSource" },
+        "collect": { "type": "string" },
+        "suite": { "type": "string" },
+        "direction": { "$ref": "#/$defs/direction" },
+        "baseline": { "type": "number" },
+        "note": { "type": "string" },
+        "tiers": { "$ref": "#/$defs/tiers" },
+        "target": {
+          "description": "Legacy v0.1 — maps to tiers.good",
+          "type": "number"
+        },
+        "warning": {
+          "description": "Legacy v0.1 — maps to tiers.warn",
+          "type": "number"
+        },
+        "critical": {
+          "description": "Legacy v0.1 — informational; above warn is fail in v0.2",
+          "type": "number"
+        },
+        "per_route": {
+          "type": "object",
+          "additionalProperties": { "$ref": "#/$defs/routeOverride" }
+        }
+      }
+    }
+  }
+}

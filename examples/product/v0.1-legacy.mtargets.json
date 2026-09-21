@@ -1,0 +1,24 @@
+{
+  "name": "product-v01-legacy",
+  "version": "0.1.0",
+  "description": "Legacy v0.1 shape — target/warning under targets map",
+  "targets": {
+    "style-tab-mount": {
+      "category": "ux",
+      "description": "Time to fully mount the Style Curation tab",
+      "unit": "ms",
+      "target": 500,
+      "warning": 1000,
+      "critical": 2000,
+      "suite": "style-tab"
+    },
+    "rating-bracket-calculate": {
+      "category": "perf",
+      "description": "Bracket calculation for a rating session",
+      "unit": "ms",
+      "target": 200,
+      "warning": 500,
+      "suite": "rating-tab"
+    }
+  }
+}

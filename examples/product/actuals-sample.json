@@ -1,0 +1,15 @@
+{
+  "dataSource": "pino-postgres:dashboard_logs (fixture)",
+  "metrics": {
+    "lcp": {
+      "actual": 1800,
+      "routes": {
+        "/rating": 1850,
+        "/curation/styles": 3900
+      }
+    },
+    "lighthouse-perf": {
+      "actual": 92
+    }
+  }
+}
