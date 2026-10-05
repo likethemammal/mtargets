@@ -1,0 +1,247 @@
+apiVersion: mtargets/v1
+kind: MetricRun
+metadata:
+  id: run-pino-postgres-1783742816458
+  title: Comfy Art Dashboard — full observability gate run
+  labels:
+    runner: pino-postgres-adapter
+    mode: demo
+  suiteId: comfy-art-dashboard
+  suiteVersion: 0.1.0
+spec:
+  startedAt: 2026-07-11T04:06:56.459Z
+  finishedAt: 2026-07-11T04:06:56.459Z
+  status: pass
+  results:
+    - objectiveId: lcp-good
+      indicatorId: lcp-rum
+      status: pass
+      observed: 1800
+      unit: ms
+      threshold:
+        op: lte
+        value: 2500
+      message: demo pino-postgres lcp (set COMFY_ART_DB_URL for live)
+      samples: &a1
+        n: 200
+    - objectiveId: lcp-needs-improvement
+      indicatorId: lcp-rum
+      status: pass
+      observed: 1800
+      unit: ms
+      threshold:
+        op: lte
+        value: 4000
+      message: demo pino-postgres lcp (set COMFY_ART_DB_URL for live)
+      samples: *a1
+    - objectiveId: lcp-rating-good
+      indicatorId: lcp-rating
+      status: pass
+      observed: 1800
+      unit: ms
+      threshold:
+        op: lte
+        value: 2500
+      message: demo pino-postgres lcp (set COMFY_ART_DB_URL for live)
+      samples:
+        n: 200
+    - objectiveId: lcp-curation-styles-good
+      indicatorId: lcp-curation-styles
+      status: pass
+      observed: 1800
+      unit: ms
+      threshold:
+        op: lte
+        value: 3500
+      message: demo pino-postgres lcp (set COMFY_ART_DB_URL for live)
+      samples:
+        n: 200
+    - objectiveId: inp-good
+      indicatorId: inp-rum
+      status: pass
+      observed: 120
+      unit: ms
+      threshold:
+        op: lte
+        value: 200
+      message: demo pino-postgres inp (set COMFY_ART_DB_URL for live)
+      samples: &a2
+        n: 200
+    - objectiveId: inp-needs-improvement
+      indicatorId: inp-rum
+      status: pass
+      observed: 120
+      unit: ms
+      threshold:
+        op: lte
+        value: 500
+      message: demo pino-postgres inp (set COMFY_ART_DB_URL for live)
+      samples: *a2
+    - objectiveId: cls-good
+      indicatorId: cls-rum
+      status: pass
+      observed: 0.05
+      unit: "1"
+      threshold:
+        op: lte
+        value: 0.1
+      message: demo pino-postgres cls (set COMFY_ART_DB_URL for live)
+      samples: &a3
+        n: 200
+    - objectiveId: cls-needs-improvement
+      indicatorId: cls-rum
+      status: pass
+      observed: 0.05
+      unit: "1"
+      threshold:
+        op: lte
+        value: 0.25
+      message: demo pino-postgres cls (set COMFY_ART_DB_URL for live)
+      samples: *a3
+    - objectiveId: ttfb-good
+      indicatorId: ttfb-rum
+      status: pass
+      observed: 400
+      unit: ms
+      threshold:
+        op: lte
+        value: 600
+      message: demo pino-postgres ttfb (set COMFY_ART_DB_URL for live)
+      samples:
+        n: 200
+    - objectiveId: fcp-good
+      indicatorId: fcp-rum
+      status: pass
+      observed: 1400
+      unit: ms
+      threshold:
+        op: lte
+        value: 1800
+      message: demo pino-postgres fcp (set COMFY_ART_DB_URL for live)
+      samples:
+        n: 200
+    - objectiveId: rating-action-fast
+      indicatorId: rating-action-latency
+      status: pass
+      observed: 150
+      unit: ms
+      threshold:
+        op: lte
+        value: 200
+      message: demo pino-postgres rating_action_latency (set COMFY_ART_DB_URL for live)
+      samples: &a4
+        n: 200
+    - objectiveId: rating-action-acceptable
+      indicatorId: rating-action-latency
+      status: pass
+      observed: 150
+      unit: ms
+      threshold:
+        op: lte
+        value: 500
+      message: demo pino-postgres rating_action_latency (set COMFY_ART_DB_URL for live)
+      samples: *a4
+    - objectiveId: queue-fetch-fast
+      indicatorId: queue-fetch-time
+      status: pass
+      observed: 600
+      unit: ms
+      threshold:
+        op: lte
+        value: 1000
+      message: demo pino-postgres queue_fetch_time (set COMFY_ART_DB_URL for live)
+      samples: &a5
+        n: 200
+    - objectiveId: queue-fetch-acceptable
+      indicatorId: queue-fetch-time
+      status: pass
+      observed: 600
+      unit: ms
+      threshold:
+        op: lte
+        value: 3000
+      message: demo pino-postgres queue_fetch_time (set COMFY_ART_DB_URL for live)
+      samples: *a5
+    - objectiveId: long-task-rate-low
+      indicatorId: long-task-rate
+      status: pass
+      observed: 0.03
+      unit: "1"
+      threshold:
+        op: lte
+        value: 0.05
+      message: demo pino-postgres long_task_rate (set COMFY_ART_DB_URL for live)
+      samples:
+        n: 200
+    - objectiveId: jank-low
+      indicatorId: jank-rate
+      status: pass
+      observed: 1.5
+      unit: count
+      threshold:
+        op: lte
+        value: 3
+      message: demo pino-postgres jank_rate (set COMFY_ART_DB_URL for live)
+      samples:
+        n: 200
+    - objectiveId: rage-click-low
+      indicatorId: rage-click-rate
+      status: pass
+      observed: 0.01
+      unit: "1"
+      threshold:
+        op: lte
+        value: 0.02
+      message: demo pino-postgres rage_click_rate (set COMFY_ART_DB_URL for live)
+      samples:
+        n: 200
+    - objectiveId: ttfr-good
+      indicatorId: ttfr
+      status: pass
+      observed: 3500
+      unit: ms
+      threshold:
+        op: lte
+        value: 5000
+      message: demo pino-postgres ttfr (set COMFY_ART_DB_URL for live)
+      samples: &a6
+        n: 200
+    - objectiveId: ttfr-acceptable
+      indicatorId: ttfr
+      status: pass
+      observed: 3500
+      unit: ms
+      threshold:
+        op: lte
+        value: 10000
+      message: demo pino-postgres ttfr (set COMFY_ART_DB_URL for live)
+      samples: *a6
+    - objectiveId: queue-wait-acceptable
+      indicatorId: queue-wait-time
+      status: pass
+      observed: 15000
+      unit: ms
+      threshold:
+        op: lte
+        value: 30000
+      message: demo pino-postgres queue_wait_time (set COMFY_ART_DB_URL for live)
+      samples:
+        n: 200
+    - objectiveId: generation-failure-low
+      indicatorId: generation-failure-rate
+      status: pass
+      observed: 0.02
+      unit: "1"
+      threshold:
+        op: lte
+        value: 0.05
+      message: demo pino-postgres generation_failure_rate (set COMFY_ART_DB_URL for
+        live)
+      samples:
+        n: 200
+  summary:
+    passed: 21
+    warned: 0
+    failed: 0
+    errored: 0
+    skipped: 0

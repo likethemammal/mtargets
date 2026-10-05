@@ -1,0 +1,617 @@
+apiVersion: mtargets/v1
+kind: MetricSuite
+metadata:
+  id: comfy-art-dashboard
+  title: Comfy Art Dashboard — full observability gate
+  version: 0.1.0
+  tags: [cwv, lighthouse, rum, glitchtip, pino-postgres, generation, ux]
+  owners: [comfy-art-fe]
+
+spec:
+  intent: |
+    Quality gate for the comfy-art-dashboard SPA. Three signal layers:
+      1. Core Web Vitals (RUM via pino-postgres — web-vitals SDK)
+      2. Lighthouse CI synthetic lab (14 routes × 3 runs)
+      3. Custom timing events + GlitchTip error budgets
+
+    Thresholds follow Google CWV Good/Needs-Improvement bands.
+    Per-route overrides apply to /curation/styles (image-heavy, larger LCP budget).
+
+  defaults:
+    window: { type: rolling, duration: 24h }
+    missing:
+      behavior: warn
+
+  policy:
+    failOn: [fail, error]
+    warnIsFailure: false
+
+  # ─── Subjects (surfaces = routes measured by CWV RUM and Lighthouse) ───────
+  subjects:
+    - id: home
+      type: surface
+      title: Home
+      selectors: { path: /, environment: production }
+
+    - id: rating
+      type: surface
+      title: Rating tab
+      selectors: { path: /rating, environment: production }
+
+    - id: curation-styles
+      type: surface
+      title: Style Curation tab
+      selectors: { path: /curation/styles, environment: production }
+
+    - id: ingestion
+      type: surface
+      title: Ingestion tab
+      selectors: { path: /ingestion, environment: production }
+
+    - id: models
+      type: surface
+      title: Models tab
+      selectors: { path: /models, environment: production }
+
+    - id: queue
+      type: surface
+      title: Queue tab
+      selectors: { path: /queue, environment: production }
+
+    - id: sla-global
+      type: system
+      title: Dashboard SLA — global
+      selectors: { environment: production }
+
+  # ─── Indicators ──────────────────────────────────────────────────────────────
+  indicators:
+
+    # === Core Web Vitals — RUM via pino-postgres (web-vitals SDK) ============
+    - id: lcp-rum
+      title: LCP (RUM p75, all routes)
+      kind: timing
+      unit: ms
+      higherIsWorse: true
+      scope: suite
+      aggregate: p75
+      window: { type: rolling, duration: 24h }
+      source:
+        type: pino-postgres
+        query: "SELECT percentile_cont(0.75) WITHIN GROUP (ORDER BY value) FROM dashboard_logs WHERE event_type = 'web-vital' AND name = 'LCP'"
+        params:
+          metric: lcp
+          dbUrlEnv: COMFY_ART_DB_URL
+
+    - id: lcp-rating
+      title: LCP (RUM p75, /rating)
+      kind: timing
+      unit: ms
+      higherIsWorse: true
+      subjectRef: rating
+      aggregate: p75
+      window: { type: rolling, duration: 24h }
+      source:
+        type: pino-postgres
+        query: "SELECT percentile_cont(0.75) WITHIN GROUP (ORDER BY value) FROM dashboard_logs WHERE event_type = 'web-vital' AND name = 'LCP' AND path = '/rating'"
+        params: { metric: lcp, route: /rating, dbUrlEnv: COMFY_ART_DB_URL }
+
+    - id: lcp-curation-styles
+      title: LCP (RUM p75, /curation/styles)
+      kind: timing
+      unit: ms
+      higherIsWorse: true
+      subjectRef: curation-styles
+      aggregate: p75
+      window: { type: rolling, duration: 24h }
+      source:
+        type: pino-postgres
+        query: "SELECT percentile_cont(0.75) WITHIN GROUP (ORDER BY value) FROM dashboard_logs WHERE event_type = 'web-vital' AND name = 'LCP' AND path = '/curation/styles'"
+        params: { metric: lcp, route: /curation/styles, dbUrlEnv: COMFY_ART_DB_URL }
+
+    - id: inp-rum
+      title: INP (RUM p75, all routes)
+      kind: timing
+      unit: ms
+      higherIsWorse: true
+      scope: suite
+      aggregate: p75
+      window: { type: rolling, duration: 24h }
+      source:
+        type: pino-postgres
+        query: "SELECT percentile_cont(0.75) WITHIN GROUP (ORDER BY value) FROM dashboard_logs WHERE event_type = 'web-vital' AND name = 'INP'"
+        params: { metric: inp, dbUrlEnv: COMFY_ART_DB_URL }
+
+    - id: cls-rum
+      title: CLS (RUM p75, all routes)
+      kind: gauge
+      unit: "1"
+      higherIsWorse: true
+      scope: suite
+      aggregate: p75
+      window: { type: rolling, duration: 24h }
+      source:
+        type: pino-postgres
+        query: "SELECT percentile_cont(0.75) WITHIN GROUP (ORDER BY value) FROM dashboard_logs WHERE event_type = 'web-vital' AND name = 'CLS'"
+        params: { metric: cls, dbUrlEnv: COMFY_ART_DB_URL }
+
+    - id: ttfb-rum
+      title: TTFB (RUM p75)
+      kind: timing
+      unit: ms
+      higherIsWorse: true
+      scope: suite
+      aggregate: p75
+      window: { type: rolling, duration: 24h }
+      source:
+        type: pino-postgres
+        query: "SELECT percentile_cont(0.75) WITHIN GROUP (ORDER BY value) FROM dashboard_logs WHERE event_type = 'web-vital' AND name = 'TTFB'"
+        params: { metric: ttfb, dbUrlEnv: COMFY_ART_DB_URL }
+
+    - id: fcp-rum
+      title: FCP (RUM p75)
+      kind: timing
+      unit: ms
+      higherIsWorse: true
+      scope: suite
+      aggregate: p75
+      window: { type: rolling, duration: 24h }
+      source:
+        type: pino-postgres
+        query: "SELECT percentile_cont(0.75) WITHIN GROUP (ORDER BY value) FROM dashboard_logs WHERE event_type = 'web-vital' AND name = 'FCP'"
+        params: { metric: fcp, dbUrlEnv: COMFY_ART_DB_URL }
+
+    # === Lighthouse CI synthetic (14 routes × 3 runs via LHCI) ==============
+    - id: lhci-perf-score
+      title: LHCI performance score
+      kind: score
+      unit: score
+      higherIsWorse: false
+      scope: suite
+      aggregate: avg
+      window: ci
+      source:
+        type: lighthouse
+        query: categories:performance
+
+    - id: lhci-a11y-score
+      title: LHCI accessibility score
+      kind: score
+      unit: score
+      higherIsWorse: false
+      scope: suite
+      aggregate: avg
+      window: ci
+      source:
+        type: lighthouse
+        query: categories:accessibility
+
+    - id: lhci-lcp
+      title: LHCI LCP (lab)
+      kind: timing
+      unit: ms
+      higherIsWorse: true
+      scope: suite
+      aggregate: p75
+      window: ci
+      source:
+        type: lighthouse
+        query: largest-contentful-paint
+
+    - id: lhci-cls
+      title: LHCI CLS (lab)
+      kind: gauge
+      unit: "1"
+      higherIsWorse: true
+      scope: suite
+      aggregate: p75
+      window: ci
+      source:
+        type: lighthouse
+        query: cumulative-layout-shift
+
+    - id: lhci-tbt
+      title: LHCI TBT (lab)
+      kind: timing
+      unit: ms
+      higherIsWorse: true
+      scope: suite
+      aggregate: avg
+      window: ci
+      source:
+        type: lighthouse
+        query: total-blocking-time
+
+    # === Custom timing — pino-postgres (comfy art performance events) ========
+    - id: rating-action-latency
+      title: Rating action latency (p95, /rating)
+      kind: timing
+      unit: ms
+      higherIsWorse: true
+      subjectRef: rating
+      aggregate: p95
+      window: { type: rolling, duration: 24h }
+      source:
+        type: pino-postgres
+        query: "SELECT percentile_cont(0.95) WITHIN GROUP (ORDER BY value) FROM dashboard_logs WHERE event_type = 'rating-action' AND path = '/rating'"
+        params: { metric: rating_action_latency, dbUrlEnv: COMFY_ART_DB_URL }
+
+    - id: queue-fetch-time
+      title: Queue fetch time (p95, /queue)
+      kind: timing
+      unit: ms
+      higherIsWorse: true
+      subjectRef: queue
+      aggregate: p95
+      window: { type: rolling, duration: 24h }
+      source:
+        type: pino-postgres
+        query: "SELECT percentile_cont(0.95) WITHIN GROUP (ORDER BY value) FROM dashboard_logs WHERE event_type = 'queue-fetch' AND path = '/queue'"
+        params: { metric: queue_fetch_time, dbUrlEnv: COMFY_ART_DB_URL }
+
+    - id: long-task-rate
+      title: Long task rate (>50ms, all routes)
+      kind: ratio
+      unit: "1"
+      higherIsWorse: true
+      scope: suite
+      aggregate: rate
+      window: { type: rolling, duration: 24h }
+      source:
+        type: pino-postgres
+        query: "SELECT COUNT(*) FILTER (WHERE value > 50)::float / NULLIF(COUNT(*), 0) FROM dashboard_logs WHERE event_type = 'long-task'"
+        params: { metric: long_task_rate, dbUrlEnv: COMFY_ART_DB_URL }
+
+    - id: jank-rate
+      title: Jank events per session (p95)
+      kind: gauge
+      unit: count
+      higherIsWorse: true
+      scope: suite
+      aggregate: p95
+      window: { type: rolling, duration: 24h }
+      source:
+        type: pino-postgres
+        query: "SELECT percentile_cont(0.95) WITHIN GROUP (ORDER BY jank_count) FROM (SELECT session_id, COUNT(*) as jank_count FROM dashboard_logs WHERE event_type = 'jank' GROUP BY session_id) t"
+        params: { metric: jank_rate, dbUrlEnv: COMFY_ART_DB_URL }
+
+    - id: rage-click-rate
+      title: Rage click sessions / total sessions
+      kind: ratio
+      unit: "1"
+      higherIsWorse: true
+      scope: suite
+      aggregate: rate
+      window: { type: rolling, duration: 24h }
+      source:
+        type: pino-postgres
+        query: "SELECT COUNT(DISTINCT session_id) FILTER (WHERE event_type = 'rage-click')::float / NULLIF(COUNT(DISTINCT session_id), 0) FROM dashboard_logs"
+        params: { metric: rage_click_rate, dbUrlEnv: COMFY_ART_DB_URL }
+
+    # === AI generation metrics — pino-postgres ================================
+    - id: ttfr
+      title: Time to first render (TTFR) — generation pipeline (p75)
+      kind: timing
+      unit: ms
+      higherIsWorse: true
+      scope: suite
+      aggregate: p75
+      window: { type: rolling, duration: 24h }
+      source:
+        type: pino-postgres
+        query: "SELECT percentile_cont(0.75) WITHIN GROUP (ORDER BY value) FROM dashboard_logs WHERE event_type = 'generation-ttfr'"
+        params: { metric: ttfr, dbUrlEnv: COMFY_ART_DB_URL }
+
+    - id: queue-wait-time
+      title: Queue wait time (p90)
+      kind: timing
+      unit: ms
+      higherIsWorse: true
+      scope: suite
+      aggregate: p90
+      window: { type: rolling, duration: 24h }
+      source:
+        type: pino-postgres
+        query: "SELECT percentile_cont(0.90) WITHIN GROUP (ORDER BY value) FROM dashboard_logs WHERE event_type = 'queue-wait'"
+        params: { metric: queue_wait_time, dbUrlEnv: COMFY_ART_DB_URL }
+
+    - id: generation-failure-rate
+      title: Generation failure rate
+      kind: ratio
+      unit: "1"
+      higherIsWorse: true
+      scope: suite
+      aggregate: rate
+      window: { type: rolling, duration: 24h }
+      source:
+        type: pino-postgres
+        query: "SELECT COUNT(*) FILTER (WHERE event_type = 'generation-failure')::float / NULLIF(COUNT(*) FILTER (WHERE event_type IN ('generation-complete', 'generation-failure')), 0) FROM dashboard_logs"
+        params: { metric: generation_failure_rate, dbUrlEnv: COMFY_ART_DB_URL }
+
+    # === Error budget — GlitchTip ============================================
+    - id: glitchtip-error-rate
+      title: GlitchTip unresolved error rate (dashboard project)
+      kind: ratio
+      unit: "1"
+      higherIsWorse: true
+      subjectRef: sla-global
+      aggregate: rate
+      window: { type: rolling, duration: 24h }
+      source:
+        type: glitchtip
+        query: "is:unresolved event.type:error"
+        params:
+          project: dashboard
+          environment: production
+          metric: error_rate
+          baseUrlEnv: GLITCHTIP_URL
+        credentialsRef: glitchtip-token
+
+    - id: glitchtip-issue-count
+      title: GlitchTip unresolved issue backlog
+      kind: count
+      unit: count
+      higherIsWorse: true
+      subjectRef: sla-global
+      aggregate: last
+      window: { type: rolling, duration: 24h }
+      source:
+        type: glitchtip
+        query: "is:unresolved"
+        params:
+          project: dashboard
+          metric: issue_count
+          baseUrlEnv: GLITCHTIP_URL
+        credentialsRef: glitchtip-token
+
+  # ─── Objectives ──────────────────────────────────────────────────────────────
+  objectives:
+
+    # CWV — Google Good band (error) and Needs-Improvement band (warn)
+    - id: lcp-good
+      indicator: lcp-rum
+      op: lte
+      value: 2500
+      severity: error
+      labels: { channel: cwv, tier: good }
+
+    - id: lcp-needs-improvement
+      indicator: lcp-rum
+      op: lte
+      value: 4000
+      severity: warn
+      labels: { channel: cwv, tier: needs-improvement }
+
+    - id: lcp-rating-good
+      indicator: lcp-rating
+      op: lte
+      value: 2500
+      severity: error
+      labels: { channel: cwv, route: /rating }
+
+    - id: lcp-curation-styles-good
+      indicator: lcp-curation-styles
+      op: lte
+      value: 3500
+      severity: error
+      labels: { channel: cwv, route: /curation/styles }
+
+    - id: inp-good
+      indicator: inp-rum
+      op: lte
+      value: 200
+      severity: error
+      labels: { channel: cwv, tier: good }
+
+    - id: inp-needs-improvement
+      indicator: inp-rum
+      op: lte
+      value: 500
+      severity: warn
+      labels: { channel: cwv, tier: needs-improvement }
+
+    - id: cls-good
+      indicator: cls-rum
+      op: lte
+      value: 0.1
+      severity: error
+      labels: { channel: cwv, tier: good }
+
+    - id: cls-needs-improvement
+      indicator: cls-rum
+      op: lte
+      value: 0.25
+      severity: warn
+      labels: { channel: cwv, tier: needs-improvement }
+
+    - id: ttfb-good
+      indicator: ttfb-rum
+      op: lte
+      value: 600
+      severity: error
+      labels: { channel: cwv, tier: good }
+
+    - id: fcp-good
+      indicator: fcp-rum
+      op: lte
+      value: 1800
+      severity: error
+      labels: { channel: cwv, tier: good }
+
+    # Lighthouse CI gate
+    - id: lhci-perf-floor
+      indicator: lhci-perf-score
+      op: gte
+      value: 0.9
+      severity: error
+      labels: { channel: lhci }
+
+    - id: lhci-a11y-floor
+      indicator: lhci-a11y-score
+      op: gte
+      value: 0.95
+      severity: error
+      labels: { channel: lhci }
+
+    - id: lhci-lcp-good
+      indicator: lhci-lcp
+      op: lte
+      value: 2500
+      severity: error
+      labels: { channel: lhci }
+
+    - id: lhci-cls-good
+      indicator: lhci-cls
+      op: lte
+      value: 0.1
+      severity: error
+      labels: { channel: lhci }
+
+    - id: lhci-tbt-good
+      indicator: lhci-tbt
+      op: lte
+      value: 300
+      severity: warn
+      labels: { channel: lhci }
+
+    # Custom timing — UX events
+    - id: rating-action-fast
+      indicator: rating-action-latency
+      op: lte
+      value: 200
+      severity: error
+      labels: { channel: ux }
+
+    - id: rating-action-acceptable
+      indicator: rating-action-latency
+      op: lte
+      value: 500
+      severity: warn
+      labels: { channel: ux }
+
+    - id: queue-fetch-fast
+      indicator: queue-fetch-time
+      op: lte
+      value: 1000
+      severity: error
+      labels: { channel: ux }
+
+    - id: queue-fetch-acceptable
+      indicator: queue-fetch-time
+      op: lte
+      value: 3000
+      severity: warn
+      labels: { channel: ux }
+
+    - id: long-task-rate-low
+      indicator: long-task-rate
+      op: lte
+      value: 0.05
+      severity: warn
+      labels: { channel: perf }
+
+    - id: jank-low
+      indicator: jank-rate
+      op: lte
+      value: 3
+      severity: warn
+      labels: { channel: ux }
+
+    - id: rage-click-low
+      indicator: rage-click-rate
+      op: lte
+      value: 0.02
+      severity: warn
+      labels: { channel: ux }
+
+    # AI generation
+    - id: ttfr-good
+      indicator: ttfr
+      op: lte
+      value: 5000
+      severity: error
+      labels: { channel: generation }
+
+    - id: ttfr-acceptable
+      indicator: ttfr
+      op: lte
+      value: 10000
+      severity: warn
+      labels: { channel: generation }
+
+    - id: queue-wait-acceptable
+      indicator: queue-wait-time
+      op: lte
+      value: 30000
+      severity: warn
+      labels: { channel: generation }
+
+    - id: generation-failure-low
+      indicator: generation-failure-rate
+      op: lte
+      value: 0.05
+      severity: error
+      labels: { channel: generation }
+
+    # Error budget
+    - id: error-rate-slo
+      indicator: glitchtip-error-rate
+      op: lt
+      value: 0.01
+      severity: error
+      labels: { channel: reliability }
+
+    - id: error-backlog
+      indicator: glitchtip-issue-count
+      op: lte
+      value: 25
+      severity: warn
+      labels: { channel: reliability }
+
+  # ─── Composite gates ─────────────────────────────────────────────────────────
+  composites:
+    - id: cwv-gate
+      title: Core Web Vitals gate
+      mode: all
+      severity: error
+      objectives:
+        - ref: lcp-good
+          key: true
+        - ref: inp-good
+          key: true
+        - ref: cls-good
+          key: true
+
+    - id: lhci-gate
+      title: Lighthouse CI gate
+      mode: all
+      severity: error
+      objectives:
+        - ref: lhci-perf-floor
+          key: true
+        - ref: lhci-a11y-floor
+          key: true
+        - ref: lhci-lcp-good
+          key: true
+        - ref: lhci-cls-good
+          key: true
+
+    - id: reliability-gate
+      title: Error reliability gate
+      mode: all
+      severity: error
+      objectives:
+        - ref: error-rate-slo
+          key: true
+
+  evidence:
+    - id: lhr
+      type: report
+      capture: on_fail
+      description: Lighthouse HTML report
+      forObjectives: [lhci-perf-floor, lhci-a11y-floor, lhci-lcp-good, lhci-cls-good, lhci-tbt-good]
+
+    - id: pino-query-log
+      type: logs
+      capture: on_fail
+      description: Pino-postgres query result snapshot
+      forObjectives: [lcp-good, inp-good, cls-good, ttfb-good, fcp-good]

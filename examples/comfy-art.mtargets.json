@@ -1,0 +1,206 @@
+{
+  "$schema": "https://mtargets.dev/schema/v0.2.json",
+  "name": "comfy-art-dashboard",
+  "version": "0.1.0",
+  "description": "Performance and quality targets for the Comfy Art dashboard",
+  "source": "comfy-art.char-dorian.ts.net",
+  "suites": {
+    "cwv": "Core Web Vitals — all routes",
+    "rating-tab": "Rating page interactions",
+    "curation-tab": "Style curation tab",
+    "scheduling-tab": "Scheduling / MultiQueue",
+    "generation": "AI generation pipeline",
+    "errors": "Error and stability rates"
+  },
+  "metrics": {
+    "lcp": {
+      "label": "Largest Contentful Paint",
+      "category": "cwv",
+      "unit": "ms",
+      "percentile": "p75",
+      "source": "rum",
+      "collect": "web-vitals onLCP({ reportAllChanges: true })",
+      "tiers": {
+        "good": 2500,
+        "warn": 4000
+      },
+      "per_route": {
+        "/rating": {
+          "tiers": { "good": 2500, "warn": 4000 },
+          "baseline": 1200
+        },
+        "/curation/styles": {
+          "tiers": { "good": 2500, "warn": 4000 },
+          "baseline": 3900
+        },
+        "/scheduling/sched-*": {
+          "tiers": { "good": 2500, "warn": 4000 },
+          "baseline": 276
+        }
+      }
+    },
+    "inp": {
+      "label": "Interaction to Next Paint",
+      "category": "cwv",
+      "unit": "ms",
+      "percentile": "p75",
+      "source": "rum",
+      "collect": "web-vitals onINP({ reportAllChanges: true }) — use attribution build",
+      "tiers": {
+        "good": 200,
+        "warn": 500
+      }
+    },
+    "cls": {
+      "label": "Cumulative Layout Shift",
+      "category": "cwv",
+      "unit": "score",
+      "percentile": "p75",
+      "source": "rum",
+      "collect": "web-vitals onCLS()",
+      "tiers": {
+        "good": 0.1,
+        "warn": 0.25
+      }
+    },
+    "ttfb": {
+      "label": "Time to First Byte",
+      "category": "cwv",
+      "unit": "ms",
+      "percentile": "p75",
+      "source": "rum",
+      "collect": "web-vitals onTTFB()",
+      "tiers": {
+        "good": 600,
+        "warn": 1800
+      }
+    },
+    "lighthouse-perf": {
+      "label": "Lighthouse Performance Score",
+      "category": "perf",
+      "unit": "score",
+      "percentile": "median",
+      "source": "synthetic",
+      "collect": "lighthouserc — 3 runs per route",
+      "direction": "higher-is-better",
+      "tiers": {
+        "good": 90,
+        "warn": 75
+      }
+    },
+    "rating-action-latency": {
+      "label": "Rating action latency (keypress → next image)",
+      "category": "ux",
+      "suite": "rating-tab",
+      "unit": "ms",
+      "percentile": "p95",
+      "source": "custom",
+      "collect": "performance.measure('rate-action', start, end) → POST /api/dashboard/events",
+      "tiers": {
+        "good": 200,
+        "warn": 500
+      }
+    },
+    "queue-fetch-time": {
+      "label": "Queue fetch time (mount → first item visible)",
+      "category": "ux",
+      "suite": "rating-tab",
+      "unit": "ms",
+      "percentile": "p95",
+      "source": "custom",
+      "collect": "performance.measure('queue-fetch') around fetch call",
+      "tiers": {
+        "good": 800,
+        "warn": 2000
+      }
+    },
+    "image-batch-load-p50": {
+      "label": "12-image batch load (p50)",
+      "category": "perf",
+      "suite": "rating-tab",
+      "unit": "ms",
+      "percentile": "p50",
+      "source": "custom",
+      "collect": "PerformanceObserver on image load events",
+      "tiers": {
+        "good": 1000,
+        "warn": 2000
+      }
+    },
+    "image-batch-load-p95": {
+      "label": "12-image batch load (p95)",
+      "category": "perf",
+      "suite": "rating-tab",
+      "unit": "ms",
+      "percentile": "p95",
+      "source": "custom",
+      "collect": "PerformanceObserver on image load events",
+      "tiers": {
+        "good": 3000,
+        "warn": 6000
+      }
+    },
+    "ttfr": {
+      "label": "Time to First Result (generation started → first image URL)",
+      "category": "generation",
+      "suite": "generation",
+      "unit": "ms",
+      "percentile": "p95",
+      "source": "server",
+      "collect": "generation_started → generation_complete delta via pino-postgres",
+      "tiers": {
+        "good": 15000,
+        "warn": 30000
+      },
+      "note": "Threshold varies by model/checkpoint — per-model breakdown recommended"
+    },
+    "generation-failure-rate": {
+      "label": "Generation failure rate (generation_failed / generation_started, 24h window)",
+      "category": "generation",
+      "suite": "generation",
+      "unit": "percent",
+      "source": "server",
+      "collect": "pino-postgres: COUNT(generation_failed) / COUNT(generation_started) rolling 24h",
+      "tiers": {
+        "good": 2,
+        "warn": 5
+      }
+    },
+    "js-error-rate": {
+      "label": "JS error rate (errors per 100 pageviews)",
+      "category": "error",
+      "suite": "errors",
+      "unit": "rate",
+      "source": "rum",
+      "collect": "GlitchTip issue count / pageview count from pino-postgres",
+      "tiers": {
+        "good": 1,
+        "warn": 3
+      }
+    },
+    "failed-image-rate": {
+      "label": "Failed image load rate",
+      "category": "error",
+      "suite": "errors",
+      "unit": "percent",
+      "source": "rum",
+      "collect": "img.onerror → POST /api/dashboard/events; rate = failed / total",
+      "tiers": {
+        "good": 1,
+        "warn": 3
+      }
+    },
+    "loaf-blocking": {
+      "label": "Long Animation Frame blocking duration",
+      "category": "perf",
+      "unit": "ms",
+      "source": "rum",
+      "collect": "PerformanceObserver({ type: 'long-animation-frame' }) — Chrome 123+",
+      "tiers": {
+        "good": 50,
+        "warn": 100
+      },
+      "note": "Per-frame measure. Logs frames where blockingDuration exceeds threshold."
+    }
+  }
+}
