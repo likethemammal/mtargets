@@ -1,0 +1,280 @@
+{
+    "authorName":  "Chris Dolphin",
+    "authorEmail":  "dolphin@likethemammal.com",
+    "commits":  [
+                    {
+                        "date":  "2026-04-09T14:20:00-07:00",
+                        "message":  "chore: scaffold package, license, and typescript project",
+                        "paths":  [
+                                      ".gitignore",
+                                      "LICENSE",
+                                      "package.json",
+                                      "package-lock.json",
+                                      "tsconfig.json",
+                                      "vitest.config.ts",
+                                      "typedoc.json"
+                                  ]
+                    },
+                    {
+                        "date":  "2026-04-18T11:05:00-07:00",
+                        "message":  "feat: core document types for mtargets/v1",
+                        "paths":  [
+                                      "src/types.ts",
+                                      "src/constants.ts",
+                                      "schema/metric-suite.schema.json",
+                                      "schema/metric-run.schema.json",
+                                      "schema/metric-catalog.schema.json",
+                                      "schema/metric-binding.schema.json"
+                                  ]
+                    },
+                    {
+                        "date":  "2026-04-26T16:15:00-07:00",
+                        "message":  "feat: load and validate MetricSuite documents",
+                        "paths":  [
+                                      "src/load.ts",
+                                      "src/parse.ts",
+                                      "src/validate.ts"
+                                  ]
+                    },
+                    {
+                        "date":  "2026-05-01T09:30:00-07:00",
+                        "message":  "feat: evaluate objectives into MetricRun results",
+                        "paths":  [
+                                      "src/evaluate.ts",
+                                      "src/ratio.ts",
+                                      "src/gherkin.ts"
+                                  ]
+                    },
+                    {
+                        "date":  "2026-05-06T21:10:00-07:00",
+                        "message":  "feat: add mtargets CLI validate command",
+                        "paths":  [
+                                      "src/cli.ts",
+                                      "src/index.ts"
+                                  ]
+                    },
+                    {
+                        "date":  "2026-05-11T13:45:00-07:00",
+                        "message":  "docs: add format specification and schema reference",
+                        "paths":  [
+                                      "docs/README.md",
+                                      "docs/reference/spec.md",
+                                      "docs/reference/schema.md"
+                                  ]
+                    },
+                    {
+                        "date":  "2026-05-16T10:20:00-07:00",
+                        "message":  "feat: lighthouse and error-tracking example runners",
+                        "paths":  [
+                                      "examples/runners/README.md",
+                                      "examples/runners/lighthouse-adapter.ts",
+                                      "examples/runners/sentry-adapter.ts",
+                                      "examples/runners/glitchtip-adapter.ts",
+                                      "examples/runners/custom-adapter.ts",
+                                      "examples/runners/ux-granularity-adapter.ts",
+                                      "examples/fixtures/lhr-sample.json",
+                                      "examples/suites/lighthouse-ci.mtargets.yaml",
+                                      "examples/suites/error-tracking.mtargets.yaml",
+                                      "examples/suites/custom-product.mtargets.yaml",
+                                      "examples/suites/ux-granularity.mtargets.yaml",
+                                      "examples/suites/network-conditions.mtargets.yaml",
+                                      "examples/suites/checkout-quality.mtargets.yaml",
+                                      "examples/suites/api-data.mtargets.yaml",
+                                      "examples/bindings/",
+                                      "examples/observations/lighthouse-pass.json",
+                                      "examples/observations/error-tracking-pass.json",
+                                      "examples/observations/custom-product-pass.json",
+                                      "examples/observations/ux-granularity-pass.json",
+                                      "examples/observations/network-conditions-pass.json",
+                                      "examples/observations/checkout-pass.json",
+                                      "examples/observations/checkout-fail-lcp.json",
+                                      "examples/observations/api-data-pass.json",
+                                      "examples/runs/lighthouse-ci.mtargets.yaml",
+                                      "examples/runs/error-tracking-sentry.mtargets.yaml",
+                                      "examples/runs/error-tracking-glitchtip.mtargets.yaml",
+                                      "examples/runs/custom-product.mtargets.yaml",
+                                      "examples/runs/ux-granularity.mtargets.yaml",
+                                      "examples/runs/checkout-pass.mtargets.yaml",
+                                      "examples/runs/checkout-fail-lcp.mtargets.yaml",
+                                      "examples/runs/checkout-quality.feature",
+                                      "examples/collectors/"
+                                  ]
+                    },
+                    {
+                        "date":  "2026-05-25T17:55:00-07:00",
+                        "message":  "docs: integrations guide for runners and adapters",
+                        "paths":  [
+                                      "docs/guide/integrations.md"
+                                  ]
+                    },
+                    {
+                        "date":  "2026-06-03T12:00:00-07:00",
+                        "message":  "feat: subject types for provider, hook, and unit",
+                        "paths":  [
+                                      "docs/guide/subjects.md"
+                                  ]
+                    },
+                    {
+                        "date":  "2026-06-14T20:30:00-07:00",
+                        "message":  "feat: metric catalog examples and generators",
+                        "paths":  [
+                                      "examples/catalogs/",
+                                      "examples/suites/catalog-apm-infra.mtargets.yaml",
+                                      "examples/suites/catalog-errors-reliability.mtargets.yaml",
+                                      "examples/suites/catalog-logging-telemetry.mtargets.yaml",
+                                      "examples/suites/catalog-ux-behavior.mtargets.yaml",
+                                      "examples/suites/catalog-web-ux-perf.mtargets.yaml",
+                                      "examples/runs/catalog-apm-infra.mtargets.yaml",
+                                      "examples/runs/catalog-errors-reliability.mtargets.yaml",
+                                      "examples/runs/catalog-logging-telemetry.mtargets.yaml",
+                                      "examples/runs/catalog-ux-behavior.mtargets.yaml",
+                                      "examples/runs/catalog-web-ux-perf.mtargets.yaml",
+                                      "examples/observations/catalog-apm-infra-pass.json",
+                                      "examples/observations/catalog-errors-reliability-pass.json",
+                                      "examples/observations/catalog-logging-telemetry-pass.json",
+                                      "examples/observations/catalog-ux-behavior-pass.json",
+                                      "examples/observations/catalog-web-ux-perf-pass.json",
+                                      "scripts/data/",
+                                      "scripts/generate-metric-catalogs.ts",
+                                      "scripts/evaluate-catalogs.ts",
+                                      "scripts/metric-catalog-data.json",
+                                      "docs/guide/catalog.md"
+                                  ]
+                    },
+                    {
+                        "date":  "2026-06-25T08:15:00-07:00",
+                        "message":  "feat: public validateFiles API for CI",
+                        "paths":  [
+                                      "src/validate-files.ts",
+                                      "docs/guide/validate.md",
+                                      "scripts/validate-examples.ts"
+                                  ]
+                    },
+                    {
+                        "date":  "2026-07-04T15:40:00-07:00",
+                        "message":  "feat: error budgets, stages, waivers, and interop",
+                        "paths":  [
+                                      "src/drift.ts",
+                                      "src/interop.ts",
+                                      "src/stage.ts",
+                                      "examples/suites/advanced-reliability-ux.mtargets.yaml"
+                                  ]
+                    },
+                    {
+                        "date":  "2026-07-13T11:25:00-07:00",
+                        "message":  "docs: advanced reliability reference",
+                        "paths":  [
+                                      "docs/reference/advanced.md"
+                                  ]
+                    },
+                    {
+                        "date":  "2026-07-22T18:50:00-07:00",
+                        "message":  "refactor: standardize on mtargets package and file names",
+                        "paths":  [
+                                      "CHANGELOG.md"
+                                  ]
+                    },
+                    {
+                        "date":  "2026-08-02T14:05:00-07:00",
+                        "message":  "docs: reorganize guides; mark package private until publish",
+                        "paths":  [
+                                      "CONTRIBUTING.md"
+                                  ]
+                    },
+                    {
+                        "date":  "2026-08-07T09:55:00-07:00",
+                        "message":  "feat: astro starlight docs site",
+                        "paths":  [
+                                      "website/",
+                                      "scripts/sync-starlight-content.ts"
+                                  ]
+                    },
+                    {
+                        "date":  "2026-08-19T16:35:00-07:00",
+                        "message":  "docs: product layers and consumer guides",
+                        "paths":  [
+                                      "docs/guide/product-layers.md",
+                                      "docs/guide/consumers.md"
+                                  ]
+                    },
+                    {
+                        "date":  "2026-08-29T12:40:00-07:00",
+                        "message":  "test: vitest coverage for validate and evaluate",
+                        "paths":  [
+                                      "tests/validate.test.ts",
+                                      "tests/evaluate.test.ts",
+                                      "tests/validate-files.test.ts",
+                                      "tests/validate-examples.test.ts",
+                                      "tests/examples.test.ts",
+                                      "tests/advanced.test.ts"
+                                  ]
+                    },
+                    {
+                        "date":  "2026-09-08T20:15:00-07:00",
+                        "message":  "ci: add github actions workflow",
+                        "paths":  [
+                                      ".github/workflows/ci.yml"
+                                  ]
+                    },
+                    {
+                        "date":  "2026-09-17T10:50:00-07:00",
+                        "message":  "docs: readme quick start and install",
+                        "paths":  [
+                                      "README.md"
+                                  ]
+                    },
+                    {
+                        "date":  "2026-09-21T13:10:00-07:00",
+                        "message":  "feat: product schema v0.2 with tiers and per_route",
+                        "paths":  [
+                                      "schema/v0.2.json",
+                                      "src/product-types.ts",
+                                      "src/product-schema.ts",
+                                      "src/product-data.ts",
+                                      "src/load-product.ts",
+                                      "docs/guide/product-schema.md",
+                                      "examples/product/v0.2-minimal.mtargets.json",
+                                      "examples/product/v0.1-legacy.mtargets.json",
+                                      "examples/product/actuals-sample.json",
+                                      "tests/product-schema.test.ts"
+                                  ]
+                    },
+                    {
+                        "date":  "2026-09-27T19:25:00-07:00",
+                        "message":  "feat: product validate and baseline CLI",
+                        "paths":  [
+                                      "src/product-validate.ts",
+                                      "tests/product-validate.test.ts"
+                                  ]
+                    },
+                    {
+                        "date":  "2026-10-02T15:30:00-07:00",
+                        "message":  "feat: generate lighthouserc and agent-markdown report",
+                        "paths":  [
+                                      "src/generate-lighthouserc.ts",
+                                      "src/product-report.ts",
+                                      "tests/generate-report.test.ts"
+                                  ]
+                    },
+                    {
+                        "date":  "2026-10-05T11:45:00-07:00",
+                        "message":  "feat: comfy-art examples and pino-postgres adapter",
+                        "paths":  [
+                                      "examples/comfy-art.mtargets.json",
+                                      "examples/suites/comfy-art-dashboard.mtargets.yaml",
+                                      "examples/runs/comfy-art-dashboard.mtargets.yaml",
+                                      "examples/runners/pino-postgres-adapter.ts"
+                                  ]
+                    },
+                    {
+                        "date":  "2026-10-11T21:00:00-07:00",
+                        "message":  "docs: launch checklist and contributing release notes",
+                        "paths":  [
+                                      "LAUNCH.md",
+                                      "scripts/build-public-history.ps1",
+                                      "scripts/public-history-manifest.json"
+                                  ],
+                        "includeRemaining":  true
+                    }
+                ]
+}
